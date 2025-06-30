@@ -1,0 +1,275 @@
+:root {
+  --bg-dark: #121212;
+  --bg-darker: #0a0a0a;
+  --primary: #1a78cd;
+  --primary-dark: #125fa3;
+  --accent: #ff7b00;
+  --text-primary: #f5f5f5;
+  --text-secondary: #b3b3b3;
+  --success: #2e7d32;
+  --border-radius: 4px;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+}
+
+.app-container {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  grid-template-rows: 60px 1fr;
+  height: 100vh;
+  width: 100%;
+}
+
+/* Header */
+.header {
+  grid-column: 1 / -1;
+  background-color: var(--bg-darker);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.logo-icon {
+  color: var(--accent);
+}
+
+/* Sidebar */
+.sidebar {
+  background-color: var(--bg-darker);
+  padding: 20px;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  overflow-y: auto;
+}
+
+.sidebar-section {
+  margin-bottom: 25px;
+}
+
+.section-title {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.formation-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.formation-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.formation-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--primary);
+}
+
+.formation-btn.active {
+  background: var(--primary-dark);
+  border-color: var(--primary);
+}
+
+.formation-name {
+  font-weight: 500;
+  margin-top: 5px;
+}
+
+.tactical-slider {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.tactical-slider label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+}
+
+.tactical-slider input[type="range"] {
+  width: 100%;
+  height: 6px;
+  -webkit-appearance: none; /* Vendor prefix */
+  appearance: none; /* Standard property */
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  outline: none;
+}
+
+.tactical-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Vendor prefix */
+  appearance: none; /* Standard property */
+  width: 16px;
+  height: 16px;
+  background: var(--primary);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Main Content */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: var(--bg-dark);
+}
+
+.pitch-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #0a2e0a 0%, #153b0a 100%);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.mode-selector {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.mode-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 10px 20px;
+  color: var(--text-primary);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mode-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.mode-btn.active {
+  background: var(--primary);
+}
+
+.mode-btn i {
+  font-size: 1rem;
+}
+
+/* Player role palette */
+.role-palette {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  border-radius: var(--border-radius);
+}
+
+.role-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: grab;
+}
+
+.role-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-bottom: 5px;
+  border: 2px solid white;
+}
+
+.role-label {
+  font-size: 0.7rem;
+}
+/* Role selector adjustments */
+.role-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.role-option {
+  padding: 6px 12px;
+  border-radius: 4px;
+  color: white;
+  font-size: 0.8rem;
+  border: none;
+  cursor: pointer;
+}
+/* Player zones */
+.player-zone-defensive { fill: #1976D2; }
+.player-zone-midfield { fill: #9C27B0; }
+.player-zone-attacking { fill: #FF9800; }
+.player-zone-goalkeeper { fill: #FF5722; }
+.player-role-DM .player-circle {
+  fill: #673AB7;
+  stroke: #FFFFFF;
+}
+
+/* Animation for color changes */
+konva-circle {
+  transition: fill 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .app-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: 60px auto 1fr;
+  }
+
+  .sidebar {
+    grid-row: 2;
+    grid-column: 1;
+  }
+
+  .main-content {
+    grid-row: 3;
+    grid-column: 1;
+  }
+}

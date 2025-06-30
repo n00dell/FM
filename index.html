@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FM24 Tactics Simulator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <i class="fas fa-futbol logo-icon"></i>
+        <span>FM24 Tactics Simulator</span>
+      </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <h3 class="section-title">Formations</h3>
+        <div class="formation-grid">
+          <button class="formation-btn active" data-formation="433">
+            <div class="formation-preview">4-3-3</div>
+            <span class="formation-name">4-3-3</span>
+          </button>
+          <button class="formation-btn" data-formation="442">
+            <div class="formation-preview">4-4-2</div>
+            <span class="formation-name">4-4-2</span>
+          </button>
+          <button class="formation-btn" data-formation="352">
+            <div class="formation-preview">3-5-2</div>
+            <span class="formation-name">3-5-2</span>
+          </button>
+          <button class="formation-btn" data-formation="4231">
+            <div class="formation-preview">4-2-3-1</div>
+            <span class="formation-name">4-2-3-1</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3 class="section-title">Team Instructions</h3>
+        <div class="tactical-slider">
+          <label for="mentality">Mentality</label>
+          <input type="range" id="mentality" min="0" max="100" value="50">
+        </div>
+        <div class="tactical-slider">
+          <label for="defensive-line">Defensive Line</label>
+          <input type="range" id="defensive-line" min="0" max="100" value="50">
+        </div>
+        <div class="tactical-slider">
+          <label for="pressing">Pressing Intensity</label>
+          <input type="range" id="pressing" min="0" max="100" value="50">
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3 class="section-title">Player Instructions</h3>
+        <div class="player-instructions">
+          <p class="empty-state">Select a player to edit instructions</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="mode-selector">
+        <button class="mode-btn active" data-mode="defend">
+          <i class="fas fa-shield-alt"></i>
+          Defend
+        </button>
+        <button class="mode-btn" data-mode="transition">
+          <i class="fas fa-arrows-alt-h"></i>
+          Transition
+        </button>
+        <button class="mode-btn" data-mode="attack">
+          <i class="fas fa-bullseye"></i>
+          Attack
+        </button>
+      </div>
+
+      <div class="pitch-container" id="konva-holder">
+        <!-- Konva canvas will be inserted here -->
+        
+        <!-- Role palette -->
+        <div class="role-palette">
+          <div class="role-item" data-role="GK">
+            <div class="role-circle"></div>
+            <span class="role-label">GK</span>
+          </div>
+          <div class="role-item" data-role="CB">
+            <div class="role-circle"></div>
+            <span class="role-label">CB</span>
+          </div>
+          <div class="role-item" data-role="FB">
+            <div class="role-circle" ></div>
+            <span class="role-label">FB</span>
+          </div>
+          <div class="role-item" data-role="CM">
+            <div class="role-circle" ></div>
+            <span class="role-label">CM</span>
+          </div>
+          <div class="role-item" data-role="W">
+            <div class="role-circle"></div>
+            <span class="role-label">W</span>
+          </div>
+          <div class="role-item" data-role="ST">
+            <div class="role-circle"></div>
+            <span class="role-label">ST</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/index.js" type="module"></script>
+</body>
+</html>
