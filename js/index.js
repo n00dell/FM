@@ -22,6 +22,14 @@ const PLAYER_ROLES = {
   W:  { color: '#FF9800', name: 'Winger' },
   ST: { color: '#4CAF50', name: 'Striker' }
 };
+const ROW_COLORS = [
+  PLAYER_ROLES.ST.color,
+  PLAYER_ROLES.AM.color,
+  PLAYER_ROLES.CM.color,
+  PLAYER_ROLES.DM.color,
+  PLAYER_ROLES.CB.color,  // or FB color, your choice
+  PLAYER_ROLES.GK.color
+];
 
 // Define your formations in row/col terms—no magic numbers
 const FORMATIONS = {
@@ -49,9 +57,10 @@ const FORMATIONS = {
       '8','10',
       '7','11',
       '9'
-    ]
+    ],
+    spread: [ 1,   1,   1,   1,   1,   1   ],  // horizontal multiplier
+    depth:  [ 0,  -20,  -10,   0,   0,   0   ]
   }
-  // add 442, 352 etc. the same way…
 };
 
 // 1) Draw pitch + store dims
@@ -101,75 +110,57 @@ function initStage() {
 }
 
 // 2) Build ghost spots and rowStarts
-function initGhostSpots() {
-  const { offsetY, cx } = state.dimensions;
+function buildGhostSpotsForFormation(formationName) {
+  const cfg = FORMATIONS[formationName];
+  if (!cfg) return;
 
-  // rows top→bottom
-  const rows = [
-    { y: offsetY + 140, xOff: [-60, 0, 60]      }, // ST(3)
-    { y: offsetY + 220, xOff: [-140,-70,0,70,140]}, // AM(5)
-    { y: offsetY + 280, xOff: [-140,-70,0,70,140]}, // CM(5)
-    { y: offsetY + 360, xOff: [-140,-70,0,70,140]}, // DM(5)
-    { y: offsetY + 440, xOff: [-140,-70,0,70,140]}, // DEF(5)
-    { y: offsetY + 560, xOff: [0]               }  // GK(1)
-  ];
-
-  // build a flat ghostSpots + row-length/starts
-  const lengths = rows.map(r => r.xOff.length);
-  const starts  = lengths.reduce((a,len,i) => {
-    if (i===0) a.push(0);
-    else       a.push(a[i-1] + lengths[i-1]);
-    return a;
-  }, []);
-
+  // Clear old spots
+  state.layers.formation.destroyChildren();
   state.ghostSpots = [];
-  rows.forEach((r,i) => {
-    r.xOff.forEach((dx,j) => {
+
+  const { offsetY, cx, fieldHeight } = state.dimensions;
+  const shape = cfg.shape;
+
+  const totalRows = Math.max(...shape.map(r => r.row)) + 1;
+
+  const rowSpacing = fieldHeight * 0.7 / totalRows;
+
+  const rowStarts = [];
+
+  let spotIndex = 0;
+
+  shape.forEach(g => {
+    const y = offsetY + g.row * rowSpacing + (cfg.depth?.[g.row] || 0);
+    rowStarts[g.row] = spotIndex;
+    const rowCols = g.cols.length;
+    const centerOffset = (rowCols - 1) / 2;
+
+    g.cols.forEach((col, i) => {
+      const spacing = 60 * (cfg.spread?.[g.row] || 1);
+      const centerX = cx + (i - centerOffset) * spacing; // assuming 5 cols centered at 2
       const spot = new Konva.Circle({
-        x: cx + dx,
-        y: r.y,
+        x: centerX,
+        y: y,
         radius: 15,
         fill: 'rgba(128,128,128,0.6)',
         stroke: 'white',
-        strokeWidth: 2,
-        visible: false
+        strokeWidth: 2
       });
       spot.occupied = false;
-      state.ghostSpots.push(spot);
+      spot.baseX = spot.x();
+      spot.baseY = spot.y();
+      spot.row = g.row;
+
       state.layers.formation.add(spot);
+      state.ghostSpots.push(spot);
+      spotIndex++;
     });
   });
 
-  state.rowStarts = starts; // [0,3,8,13,18,23]
+  state.rowStarts = rowStarts;
+  state.layers.formation.draw();
 }
 
-// 3) Player factory
-function createPlayer(x,y,num,role) {
-  const group = new Konva.Group({ x,y, draggable:true, role, number:num });
-  const circ = new Konva.Circle({ radius:18, fill:PLAYER_ROLES[role].color, stroke:'white', strokeWidth:2 });
-  const text = new Konva.Text({
-    text: num, fontSize:14, fill:'white',
-    width:36, height:36, offsetX:18, offsetY:18,
-    align:'center', verticalAlign:'middle'
-  });
-  group.add(circ, text);
-
-  group.on('dragstart', () => {
-    state.selectedPlayer = group;
-    state.ghostSpots.forEach(s => { if(!s.occupied) s.visible(true) });
-    state.layers.formation.draw();
-    if (group.currentSpot) group.currentSpot.occupied = false;
-  });
-
-  group.on('dragend', () => {
-    state.ghostSpots.forEach(s => s.visible(false));
-    state.layers.formation.draw();
-    // snap→closest spot or revert/destroy (reuse your handlePlayerDrop)
-    handlePlayerDrop(group);
-  });
-
-  return group;
-}
 
 // 4) Drop logic (reuse your version)
 function handlePlayerDrop(player) {
@@ -188,40 +179,137 @@ function handlePlayerDrop(player) {
     player.position({ x:player.currentSpot.x(), y:player.currentSpot.y() });
     player.currentSpot.occupied = true;
   }
+  const circ = player.findOne('Circle');
+  if (!circ) return; // no circle found, can't snap
+  circ.fill(ROW_COLORS[closest.row]); // reset color
+  player.currentSpot = closest; 
   state.layers.players.draw();
 }
-
+function reflowSpots(formationName) {
+  const cfg = FORMATIONS[formationName];
+  if (!cfg) return;
+  
+  state.ghostSpots.forEach(spot => {
+    const r = spot.row;               // which row 0…5
+    const s = cfg.spread[r];          // how much to stretch horizontally
+    const d = cfg.depth[r];           // how much to shift vertically
+    
+    // horizontal: compute delta from center
+    const dx = spot.baseX - state.dimensions.cx;
+    spot.x( state.dimensions.cx + dx * s );
+    
+    // vertical: just offset the baseY
+    spot.y( spot.baseY + d );
+  });
+  
+  // redraw the formation‐layer
+  state.layers.formation.draw();
+}
 // 5) applyFormation using your rowStarts + shape
 function applyFormation(name) {
+  updateSpreadDepthUIControls(); // Update UI controls for spread/depth
+  state.currentFormation = name;
+
+  buildGhostSpotsForFormation(name); // ← 🔥 now builds only the spots you need
+
+  reflowSpots(name); // Still needed for spread/depth updates
+
+  // reset spots
+  state.ghostSpots.forEach(s => s.occupied = false);
+
   const cfg = FORMATIONS[name];
-  if (!cfg) return;
-  // clear old
-  state.ghostSpots.forEach(s => s.occupied=false);
+  const spots = state.ghostSpots;
 
-  // build spot-list via rowStarts + shape:
-  const spots = cfg.shape.flatMap(g =>
-    g.cols.map(col => {
-      const idx = state.rowStarts[g.row] + col;
-      return state.ghostSpots[idx];
-    })
-  );
+  state.players.forEach((pl, i) => {
+    const spot = spots[i];
+    if (!spot) return;
 
-  // snap each player
-  state.players.forEach((pl,i) => {
-    const target = spots[i];
-    if (pl.currentSpot) pl.currentSpot.occupied=false;
-    pl.position({ x:target.x(), y:target.y() });
-    target.occupied=true;
-    pl.currentSpot=target;
-    // update color & num & role
-    pl.findOne('Circle').fill(PLAYER_ROLES[cfg.roles[i]].color);
+    if (pl.currentSpot) pl.currentSpot.occupied = false;
+    pl.position({ x: spot.x(), y: spot.y() });
+    spot.occupied = true;
+    pl.currentSpot = spot;
+
+    pl.findOne('Circle').fill(ROW_COLORS[spot.row]);
     pl.findOne('Text').text(cfg.numbers[i]);
-    pl.role=cfg.roles[i];
-    pl.number=cfg.numbers[i];
+    pl.role = cfg.roles[i];
+    pl.number = cfg.numbers[i];
   });
 
   state.layers.players.draw();
 }
+
+function updateSpreadDepthUIControls() {
+  const cfg = FORMATIONS[state.currentFormation];
+  const lines = cfg.shape.map(s => s.row);
+  const uniqueLines = [...new Set(lines)];
+
+  const controlPanel = document.getElementById('tweak-panel');
+  controlPanel.innerHTML = '';
+
+  uniqueLines.forEach(row => {
+    const spread = cfg.spread?.[row] ?? 1;
+    const depth = cfg.depth?.[row] ?? 0;
+
+    controlPanel.innerHTML += `
+      <label>Row ${row} Spread:
+        <input type="range" min="0.5" max="2.5" step="0.1" value="${spread}" data-type="spread" data-row="${row}">
+      </label><br/>
+      <label>Row ${row} Depth:
+        <input type="range" min="-100" max="100" step="5" value="${depth}" data-type="depth" data-row="${row}">
+      </label><br/>
+    `;
+  });
+
+  controlPanel.querySelectorAll('input').forEach(input => {
+    input.oninput = (e) => {
+      const type = e.target.dataset.type;
+      const row = parseInt(e.target.dataset.row);
+      const value = parseFloat(e.target.value);
+      const arr = FORMATIONS[state.currentFormation][type] || [];
+      arr[row] = value;
+      FORMATIONS[state.currentFormation][type] = arr;
+      reflowSpots(state.currentFormation);
+    };
+  });
+}
+function createPlayer(x, y, number, role) {
+  const group = new Konva.Group({
+    x: x,
+    y: y,
+    draggable: true
+  });
+
+  const circle = new Konva.Circle({
+    radius: 18,
+    fill: PLAYER_ROLES[role]?.color || '#ccc',
+    stroke: 'white',
+    strokeWidth: 2
+  });
+
+  const label = new Konva.Text({
+    text: number,
+    fontSize: 14,
+    fontFamily: 'Arial',
+    fill: 'white',
+    align: 'center',
+    verticalAlign: 'middle',
+    width: 36,
+    height: 36,
+    offsetX: 18,
+    offsetY: 18
+  });
+
+  group.add(circle);
+  group.add(label);
+
+  // Drag logic
+  group.on('dragend', () => {
+    handlePlayerDrop(group);
+  });
+
+  return group;
+}
+
 
 // 6) initPlayers
 function initPlayers() {
@@ -241,11 +329,12 @@ function initPlayers() {
 // 7) boot the app
 document.addEventListener('DOMContentLoaded', () => {
   initStage();
-  initGhostSpots();
+  buildGhostSpotsForFormation('433');
   initPlayers();
   applyFormation('433');
+  
 
-  // UI buttons
+   // Formation buttons
   document.querySelectorAll('.formation-btn').forEach(btn => {
     btn.onclick = () => {
       document.querySelectorAll('.formation-btn').forEach(b => b.classList.remove('active'));
@@ -254,6 +343,25 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   });
 
+  // Extra tweak panel sliders (if you're using them)
+  const fbDepthInput = document.getElementById('fb-depth');
+  const cbSpreadInput = document.getElementById('cb-spread');
+
+  if (fbDepthInput) {
+    fbDepthInput.oninput = (e) => {
+      FORMATIONS[state.currentFormation].depth[4] = Number(e.target.value);
+      applyFormation(state.currentFormation);
+    };
+  }
+
+  if (cbSpreadInput) {
+    cbSpreadInput.oninput = (e) => {
+      FORMATIONS[state.currentFormation].spread[4] = Number(e.target.value);
+      applyFormation(state.currentFormation);
+    };
+  }
+
+  // Redraw
   state.layers.field.draw();
   state.layers.players.draw();
   state.layers.formation.draw();
