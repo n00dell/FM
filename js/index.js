@@ -1,5 +1,6 @@
 import Konva from 'https://esm.sh/konva';
-
+import { FORMATIONS } from './formation.js';
+import { getRoleForSpot, getRoleForFormationSpot } from './role.js';
 // === GLOBAL STATE ===
 const state = {
   stage: null,
@@ -10,18 +11,7 @@ const state = {
   currentFormation: '433'
 };
 
-// === FORMATIONS ===
-const FORMATIONS = {
-  '433': {
-    name: '4-3-3',
-    indices: [
-      22,             // GK
-      17, 18, 19, 21, // DEF
-      9, 10, 11,      // MID
-      0, 1, 2         // ATT
-    ]
-  }
-};
+
 
 // === FIELD INIT ===
 function initStage() {
@@ -103,19 +93,28 @@ function initStage() {
 
 // === GHOST SPOTS ===
 function buildGhostSpots(spread = 1, depth = 1) {
-  const { offsetY, cx } = state.dimensions;
+  const { offsetY, cx, fieldHeight } = state.dimensions;
+  // Updated rows with correct positioning
   const rows = [
+    // Row 0: Strikers (3 spots)
     { y: offsetY + 140, xOffsets: [-60, 0, 60] },
+    // Row 1: Attacking Midfield/Wingers (5 spots, wingers at ends)
     { y: offsetY + 220, xOffsets: [-140, -70, 0, 70, 140] },
-    { y: offsetY + 280, xOffsets: [-120, -60, 0, 60, 120] },
-    { y: offsetY + 360, xOffsets: [-140, -70, 0, 70, 140] },
-    { y: offsetY + 440, xOffsets: [-120, -60, 0, 60, 120] },
-    { y: offsetY + 560, xOffsets: [0] }
+    // Row 2: Central Midfield (5 spots)
+    { y: offsetY + 300, xOffsets: [-120, -60, 0, 60, 120] },
+    // Row 3: Defensive Midfield (5 spots)
+    { y: offsetY + 380, xOffsets: [-140, -70, 0, 70, 140] },
+    // Row 4: Defense (5 spots)
+    { y: offsetY + 460, xOffsets: [-120, -60, 0, 60, 120] },
+    // Row 5: Goalkeeper (1 spot) - positioned at the bottom
+    { y: offsetY + fieldHeight - 40, xOffsets: [0] }
   ];
   const colorsByRow = ['#1976d2', '#42a5f5', '#66bb6a', '#fdd835', '#e53935', '#9e9e9e'];
+  state.ghostSpots = []; // Clear existing spots
   rows.forEach((row, rowIndex) => {
-        const y = row.y * depth;
+        const y = offsetY + (row.y - offsetY) * depth;
         const fill = colorsByRow[rowIndex] || '#888';
+
         row.xOffsets.forEach((offset, spotIndex) => {
           const x = cx + offset * spread;
           const spot = new Konva.Circle({
@@ -256,7 +255,7 @@ function adjustRowPlayers(rowIndex, respectFormationPositions = true) {
 }
 // === CREATE PLAYER ===
 // Updated drag handling to use formation-aware spacing
-function createPlayer(x, y, number = '', color = '#1976d2') {
+function createPlayer(x, y, role = 'P', color = '#1976d2') {
   const group = new Konva.Group({ x, y, draggable: true });
   const circle = new Konva.Circle({
     radius: 18,
@@ -264,9 +263,12 @@ function createPlayer(x, y, number = '', color = '#1976d2') {
     stroke: 'white',
     strokeWidth: 2
   });
+  const fontSize = role.length > 3 ? 9 : (role.length > 2 ? 10 : 12);
   const label = new Konva.Text({
-    text: number,
-    fontSize: 14,
+    text: role,
+    fontSize: fontSize,
+    fontFamily: 'Arial, sans-serif',
+    fontStyle: 'bold',
     fill: 'white',
     align: 'center',
     verticalAlign: 'middle',
@@ -277,6 +279,7 @@ function createPlayer(x, y, number = '', color = '#1976d2') {
   });
   group.add(circle, label);
   group.currentSpot = null;
+  group.playerRole = role;
 
   group.on('dragstart', () => {
     showGhostSpots();
@@ -306,6 +309,17 @@ function createPlayer(x, y, number = '', color = '#1976d2') {
       group.position({ x: closest.x(), y: closest.y() });
       closest.occupied = true;
       group.currentSpot = closest;
+
+      // Get the correct role for this spot
+      const newRole = getRoleForSpot(closest.rowIndex, closest.spotIndex);
+      group.playerRole = newRole;
+      
+      // Update label
+      const textNode = group.findOne('Text');
+      textNode.text(newRole);
+      textNode.fontSize(newRole.length > 3 ? 9 : (newRole.length > 2 ? 10 : 12));
+      
+      // Update color
       group.findOne('Circle').fill(closest.RoleColor);
       
       // Use formation-aware spacing - pass false since this is user drag
@@ -337,17 +351,31 @@ function createPlayer(x, y, number = '', color = '#1976d2') {
 function initPlayers() {
       state.players = []; // Clear existing players
       
-      for (let i = 0; i < 11; i++) {
-        const spot = state.ghostSpots[i];
-        if (!spot) continue;
-        
-        const color = spot.RoleColor || '#1976d2';
-        const player = createPlayer(spot.x(), spot.y(), (i + 1).toString(), color);
-        spot.occupied = true;
-        player.currentSpot = spot;
-        state.layers.players.add(player);
-        state.players.push(player);
-      }
+      const playersToCreate = [
+    { spotIndex: 23, role: 'GK' },  // Goalkeeper first
+    { spotIndex: 0, role: 'ST' },   // Striker
+    { spotIndex: 5, role: 'LW' },   // Left Winger
+    { spotIndex: 9, role: 'RW' },   // Right Winger
+    { spotIndex: 10, role: 'LCM' }, // Left Central Mid
+    { spotIndex: 12, role: 'RCM' }, // Right Central Mid
+    { spotIndex: 15, role: 'CDM' }, // Defensive Mid
+    { spotIndex: 20, role: 'LB' },  // Left Back
+    { spotIndex: 21, role: 'LCB' }, // Left Center Back
+    { spotIndex: 22, role: 'CB' },  // Center Back
+    { spotIndex: 24, role: 'RB' }   // Right Back
+  ];
+
+      playersToCreate.forEach(({ spotIndex, role }) => {
+    const spot = state.ghostSpots[spotIndex];
+    if (!spot) return;
+    
+    const color = spot.RoleColor || '#1976d2';
+    const player = createPlayer(spot.x(), spot.y(), role, color);
+    spot.occupied = true;
+    player.currentSpot = spot;
+    state.layers.players.add(player);
+    state.players.push(player);
+  });
       state.layers.players.draw();
     }
 
@@ -403,6 +431,16 @@ function applyFormation(name) {
     
     player.currentSpot = spot;
     spot.occupied = true;
+
+    // Update role based on formation
+    const newRole = formation.roles ? formation.roles[spotIndex] : 
+                   getRoleForSpot(spot.rowIndex, spot.spotIndex);
+    player.playerRole = newRole;
+
+    // Update label text and font size
+    const textNode = player.findOne('Text');
+    textNode.text(newRole);
+    textNode.fontSize(newRole.length > 2 ? 10 : 12);
     
     // Track rows that need adjustment
     if (oldRowIndex !== undefined) rowsToAdjust.add(oldRowIndex);
@@ -420,7 +458,38 @@ function applyFormation(name) {
   
   state.layers.players.draw();
 }
+// Optional: Function to manually set a player's role (useful for custom formations)
+function setPlayerRole(player, newRole) {
+  player.playerRole = newRole;
+  const textNode = player.findOne('Text');
+  textNode.text(newRole);
+  textNode.fontSize(newRole.length > 2 ? 10 : 12);
+  state.layers.players.draw();
+}
 
+// Optional: Function to get all players by role (useful for tactical analysis)
+function getPlayersByRole(role) {
+  return state.players.filter(player => player.playerRole === role);
+}
+
+// Optional: Function to validate formation (check if all essential roles are filled)
+function validateFormation() {
+  const roles = state.players.map(p => p.playerRole);
+  const hasGK = roles.includes('GK');
+  const hasDefenders = roles.some(role => ['LB', 'CB', 'LCB', 'RCB', 'RB'].includes(role));
+  const hasMidfielders = roles.some(role => ['CM', 'CDM', 'CAM', 'LM', 'RM'].includes(role));
+  const hasAttackers = roles.some(role => ['ST', 'LW', 'RW', 'CF'].includes(role));
+  
+  return {
+    valid: hasGK && hasDefenders && hasMidfielders && hasAttackers,
+    missing: {
+      goalkeeper: !hasGK,
+      defenders: !hasDefenders,
+      midfielders: !hasMidfielders,
+      attackers: !hasAttackers
+    }
+  };
+}
 // === UI: SHOW/HIDE SPOTS ===
 function showGhostSpots() {
       for (const spot of state.ghostSpots) {
