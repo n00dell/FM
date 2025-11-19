@@ -1,121 +1,290 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FM24 Tactics Simulator</title>
+  <title>FM24 Tactics Board</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
   <div class="app-container">
     <!-- Header -->
     <header class="header">
-      <div class="logo">
-        <i class="fas fa-futbol logo-icon"></i>
-        <span>FM24 Tactics Simulator</span>
+      <div class="header-content">
+        <div class="brand">
+          <div class="brand-icon">
+            <i class="fas fa-futbol"></i>
+          </div>
+          <div class="brand-info">
+            <h1>FM24 Tactics</h1>
+            <span>Interactive Formation Builder</span>
+          </div>
+        </div>
+
+        <div class="header-controls">
+          <button class="btn-icon" title="Save Formation">
+            <i class="fas fa-save"></i>
+          </button>
+          <button class="btn-icon" title="Share">
+            <i class="fas fa-share-alt"></i>
+          </button>
+          <button class="btn-icon" title="Reset">
+            <i class="fas fa-redo"></i>
+          </button>
+        </div>
       </div>
     </header>
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-section">
-        <h3 class="section-title">Formations</h3>
-        <div class="formation-grid">
-          <button class="formation-btn active" data-formation="433">
-            <div class="formation-preview">4-3-3</div>
-            <span class="formation-name">4-3-3</span>
-          </button>
-          <button class="formation-btn" data-formation="442">
-            <div class="formation-preview">4-4-2</div>
-            <span class="formation-name">4-4-2</span>
-          </button>
-          <button class="formation-btn" data-formation="352">
-            <div class="formation-preview">3-5-2</div>
-            <span class="formation-name">3-5-2</span>
-          </button>
-          <button class="formation-btn" data-formation="4231">
-            <div class="formation-preview">4-2-3-1</div>
-            <span class="formation-name">4-2-3-1</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="sidebar-section">
-        <h3 class="section-title">Team Instructions</h3>
-        <div class="tactical-slider">
-          <label for="mentality">Mentality</label>
-          <input type="range" id="mentality" min="0" max="100" value="50">
-        </div>
-        <div class="tactical-slider">
-          <label for="defensive-line">Defensive Line</label>
-          <input type="range" id="defensive-line" min="0" max="100" value="50">
-        </div>
-        <div class="tactical-slider">
-          <label for="pressing">Pressing Intensity</label>
-          <input type="range" id="pressing" min="0" max="100" value="50">
-        </div>
-      </div>
-
-      <div class="sidebar-section">
-        <h3 class="section-title">Player Instructions</h3>
-        <div class="player-instructions">
-          <p class="empty-state">Select a player to edit instructions</p>
-        </div>
-      </div>
-    </aside>
-
-    <!-- Main Content -->
+    <!-- Main Content Area -->
     <main class="main-content">
-      <div class="mode-selector">
-        <button class="mode-btn active" data-mode="defend">
-          <i class="fas fa-shield-alt"></i>
-          Defend
-        </button>
-        <button class="mode-btn" data-mode="transition">
-          <i class="fas fa-arrows-alt-h"></i>
-          Transition
-        </button>
-        <button class="mode-btn" data-mode="attack">
-          <i class="fas fa-bullseye"></i>
-          Attack
-        </button>
-      </div>
+      <!-- Left Sidebar - Formation Selector -->
+      <aside class="formations-panel">
+        <div class="panel-header">
+          <i class="fas fa-chess-board"></i>
+          <h2>Formations</h2>
+        </div>
+        <div class="formations-grid">
+          <button class="formation-btn active" data-formation="433">
+            <div class="formation-viz">
+              <div class="formation-dots">
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span>
+              </div>
+            </div>
+            <div class="formation-info">
+              <strong>4-3-3</strong>
+              <small>Attack</small>
+            </div>
+          </button>
 
-      <div class="pitch-container" id="konva-holder">
-        <!-- Konva canvas will be inserted here -->
-        
-        <!-- Role palette -->
+          <button class="formation-btn" data-formation="442">
+            <div class="formation-viz">
+              <div class="formation-dots">
+                <span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span>
+              </div>
+            </div>
+            <div class="formation-info">
+              <strong>4-4-2</strong>
+              <small>Balanced</small>
+            </div>
+          </button>
+
+          <button class="formation-btn" data-formation="352">
+            <div class="formation-viz">
+              <div class="formation-dots">
+                <span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span>
+              </div>
+            </div>
+            <div class="formation-info">
+              <strong>3-5-2</strong>
+              <small>Wing Play</small>
+            </div>
+          </button>
+
+          <button class="formation-btn" data-formation="4231">
+            <div class="formation-viz">
+              <div class="formation-dots">
+                <span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span>
+              </div>
+            </div>
+            <div class="formation-info">
+              <strong>4-2-3-1</strong>
+              <small>Control</small>
+            </div>
+          </button>
+
+          <button class="formation-btn" data-formation="4141">
+            <div class="formation-viz">
+              <div class="formation-dots">
+                <span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span>
+              </div>
+            </div>
+            <div class="formation-info">
+              <strong>4-1-4-1</strong>
+              <small>Defensive</small>
+            </div>
+          </button>
+
+          <button class="formation-btn" data-formation="532">
+            <div class="formation-viz">
+              <div class="formation-dots">
+                <span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span>
+              </div>
+            </div>
+            <div class="formation-info">
+              <strong>5-3-2</strong>
+              <small>Counter</small>
+            </div>
+          </button>
+
+          <button class="formation-btn" data-formation="343">
+            <div class="formation-viz">
+              <div class="formation-dots">
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span>
+              </div>
+            </div>
+            <div class="formation-info">
+              <strong>3-4-3</strong>
+              <small>Wide</small>
+            </div>
+          </button>
+
+          <button class="formation-btn" data-formation="4321">
+            <div class="formation-viz">
+              <div class="formation-dots">
+                <span></span>
+                <span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span>
+              </div>
+            </div>
+            <div class="formation-info">
+              <strong>4-3-2-1</strong>
+              <small>Diamond</small>
+            </div>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Center - Pitch -->
+      <div class="pitch-section">
+        <div class="phase-tabs">
+          <button class="phase-tab active" data-mode="defend">
+            <i class="fas fa-shield-alt"></i> Defend
+          </button>
+          <button class="phase-tab" data-mode="transition">
+            <i class="fas fa-exchange-alt"></i> Transition
+          </button>
+          <button class="phase-tab" data-mode="attack">
+            <i class="fas fa-bullseye"></i> Attack
+          </button>
+        </div>
+
+        <div class="pitch-container" id="konva-holder">
+          <!-- Konva canvas will be mounted here -->
+        </div>
+
+        <!-- Role Palette -->
         <div class="role-palette">
-          <div class="role-item" data-role="GK">
-            <div class="role-circle"></div>
-            <span class="role-label">GK</span>
+          <div class="palette-label">
+            <i class="fas fa-users"></i>
+            <span>Player Roles</span>
           </div>
-          <div class="role-item" data-role="CB">
-            <div class="role-circle"></div>
-            <span class="role-label">CB</span>
-          </div>
-          <div class="role-item" data-role="FB">
-            <div class="role-circle" ></div>
-            <span class="role-label">FB</span>
-          </div>
-          <div class="role-item" data-role="CM">
-            <div class="role-circle" ></div>
-            <span class="role-label">CM</span>
-          </div>
-          <div class="role-item" data-role="W">
-            <div class="role-circle"></div>
-            <span class="role-label">W</span>
-          </div>
-          <div class="role-item" data-role="ST">
-            <div class="role-circle"></div>
-            <span class="role-label">ST</span>
+          <div class="role-items">
+            <div class="role-item" data-role="GK">
+              <div class="role-circle"></div>
+              <span>GK</span>
+            </div>
+            <div class="role-item" data-role="CB">
+              <div class="role-circle"></div>
+              <span>CB</span>
+            </div>
+            <div class="role-item" data-role="FB">
+              <div class="role-circle"></div>
+              <span>FB</span>
+            </div>
+            <div class="role-item" data-role="CM">
+              <div class="role-circle"></div>
+              <span>CM</span>
+            </div>
+            <div class="role-item" data-role="W">
+              <div class="role-circle"></div>
+              <span>W</span>
+            </div>
+            <div class="role-item" data-role="ST">
+              <div class="role-circle"></div>
+              <span>ST</span>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- Right Sidebar - Tactics -->
+      <aside class="tactics-panel">
+        <div class="panel-header">
+          <i class="fas fa-sliders-h"></i>
+          <h2>Team Tactics</h2>
+        </div>
+
+        <div class="tactics-controls">
+          <div class="control-group">
+            <div class="control-header">
+              <label>Mentality</label>
+              <span class="value">50</span>
+            </div>
+            <input type="range" id="mentality" min="0" max="100" value="50" class="slider">
+            <div class="control-labels">
+              <span>Defensive</span>
+              <span>Attacking</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <label>Defensive Line</label>
+              <span class="value">50</span>
+            </div>
+            <input type="range" id="defensive-line" min="0" max="100" value="50" class="slider">
+            <div class="control-labels">
+              <span>Deep</span>
+              <span>High</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <label>Pressing</label>
+              <span class="value">50</span>
+            </div>
+            <input type="range" id="pressing" min="0" max="100" value="50" class="slider">
+            <div class="control-labels">
+              <span>Low</span>
+              <span>Intense</span>
+            </div>
+          </div>
+
+          <div class="player-instructions">
+            <p class="empty-state">
+              <i class="fas fa-hand-pointer"></i>
+              Select a player to edit instructions
+            </p>
+          </div>
+        </div>
+      </aside>
     </main>
   </div>
 
   <script src="js/index.js" type="module"></script>
 </body>
+
 </html>

@@ -3,56 +3,240 @@ export const FORMATIONS = {
   '433': {
     name: '4-3-3',
     indices: [
-      23, // GK (row 5, spot 0)
-      20, // LB (row 4, spot 0) 
-      21, // LCB (row 4, spot 1)
-      22, // CB (row 4, spot 2)
-      23, // RCB (row 4, spot 3)
-      24, // RB (row 4, spot 4)
-      15, // CDM (row 3, spot 2)
-      10, // LCM (row 2, spot 1)
-      12, // RCM (row 2, spot 3)
-      5,  // LW (row 1, spot 0)
-      1,  // ST (row 0, spot 1)
-      9   // RW (row 1, spot 4)
+      23, // GK
+      18, // LB
+      19, // LCB
+      21, // RCB
+      22, // RB
+      15, // CDM
+      9,  // LCM
+      11, // RCM
+      3,  // LW
+      1,  // ST
+      7   // RW
     ],
     roles: {
-      23: 'GK',   // Goalkeeper
-      20: 'LB',   // Left Back
-      21: 'LCB',  // Left Center Back
-      22: 'CB',   // Center Back
-      23: 'RCB',  // Right Center Back
-      24: 'RB',   // Right Back
-      15: 'CDM',  // Defensive Midfielder
-      10: 'LCM',  // Left Central Midfielder
-      12: 'RCM',  // Right Central Midfielder
-      5:  'LW',   // Left Winger
-      1:  'ST',   // Striker
-      9:  'RW'    // Right Winger
+      23: 'GK',
+      18: 'LB',
+      19: 'LCB',
+      21: 'RCB',
+      22: 'RB',
+      15: 'CDM',
+      9: 'CM',
+      11: 'CM',
+      3: 'LW',
+      1: 'ST',
+      7: 'RW'
     }
   },
-  
+
   '442': {
     name: '4-4-2',
     indices: [
       23, // GK
-      20, 21, 22, 23, 24, // Defense (LB, LCB, CB, RCB, RB)
-      10, 11, 12, 13,     // Midfield (LM, LCM, RCM, RM)
-      1, 2                // Attack (ST, ST)
+      18, // LB
+      19, // LCB
+      21, // RCB
+      22, // RB
+      8,  // LM
+      9,  // LCM
+      11, // RCM
+      12, // RM
+      0,  // LST
+      2   // RST
     ],
     roles: {
       23: 'GK',
-      20: 'LB',
-      21: 'LCB', 
-      22: 'CB',
-      23: 'RCB',
-      24: 'RB',
-      10: 'LM',
-      11: 'LCM',
-      12: 'RCM', 
-      13: 'RM',
-      1: 'ST',
+      18: 'LB',
+      19: 'LCB',
+      21: 'RCB',
+      22: 'RB',
+      8: 'LM',
+      9: 'CM',
+      11: 'CM',
+      12: 'RM',
+      0: 'ST',
       2: 'ST'
+    }
+  },
+
+  '352': {
+    name: '3-5-2',
+    indices: [
+      23, // GK
+      19, // LCB
+      20, // CB
+      21, // RCB
+      13, // LWB (Row 3)
+      9,  // LCM
+      10, // CM
+      11, // RCM
+      17, // RWB (Row 3)
+      0,  // LST
+      2   // RST
+    ],
+    roles: {
+      23: 'GK',
+      19: 'LCB',
+      20: 'CB',
+      21: 'RCB',
+      13: 'LWB',
+      9: 'CM',
+      10: 'CM',
+      11: 'CM',
+      17: 'RWB',
+      0: 'ST',
+      2: 'ST'
+    }
+  },
+
+  '4231': {
+    name: '4-2-3-1',
+    indices: [
+      23, // GK
+      18, // LB
+      19, // LCB
+      21, // RCB
+      22, // RB
+      14, // LCDM
+      16, // RCDM
+      3,  // LW
+      5,  // CAM
+      7,  // RW
+      1   // ST
+    ],
+    roles: {
+      23: 'GK',
+      18: 'LB',
+      19: 'LCB',
+      21: 'RCB',
+      22: 'RB',
+      14: 'CDM',
+      16: 'CDM',
+      3: 'LW',
+      5: 'CAM',
+      7: 'RW',
+      1: 'ST'
+    }
+  },
+
+  '4141': {
+    name: '4-1-4-1',
+    indices: [
+      23, // GK
+      18, // LB
+      19, // LCB
+      21, // RCB
+      22, // RB
+      15, // CDM
+      8,  // LM
+      9,  // LCM
+      11, // RCM
+      12, // RM
+      1   // ST
+    ],
+    roles: {
+      23: 'GK',
+      18: 'LB',
+      19: 'LCB',
+      21: 'RCB',
+      22: 'RB',
+      15: 'CDM',
+      8: 'LM',
+      9: 'CM',
+      11: 'CM',
+      12: 'RM',
+      1: 'ST'
+    }
+  },
+
+  '532': {
+    name: '5-3-2',
+    indices: [
+      23, // GK
+      18, // LWB
+      19, // LCB
+      20, // CB
+      21, // RCB
+      22, // RWB
+      9,  // LCM
+      10, // CM
+      11, // RCM
+      0,  // LST
+      2   // RST
+    ],
+    roles: {
+      23: 'GK',
+      18: 'LWB',
+      19: 'LCB',
+      20: 'CB',
+      21: 'RCB',
+      22: 'RWB',
+      9: 'CM',
+      10: 'CM',
+      11: 'CM',
+      0: 'ST',
+      2: 'ST'
+    }
+  },
+
+  '343': {
+    name: '3-4-3',
+    indices: [
+      23, // GK
+      19, // LCB
+      20, // CB
+      21, // RCB
+      13, // LWB (Row 3)
+      9,  // LCM
+      11, // RCM
+      17, // RWB (Row 3)
+      3,  // LW (Row 1)
+      1,  // ST
+      7   // RW (Row 1)
+    ],
+    roles: {
+      23: 'GK',
+      19: 'LCB',
+      20: 'CB',
+      21: 'RCB',
+      13: 'LWB',
+      9: 'CM',
+      11: 'CM',
+      17: 'RWB',
+      3: 'LW',
+      1: 'ST',
+      7: 'RW'
+    }
+  },
+
+  '4321': {
+    name: '4-3-2-1',
+    indices: [
+      23, // GK
+      18, // LB
+      19, // LCB
+      21, // RCB
+      22, // RB
+      9,  // LCM
+      10, // CM
+      11, // RCM
+      4,  // LAM
+      6,  // RAM
+      1   // ST
+    ],
+    roles: {
+      23: 'GK',
+      18: 'LB',
+      19: 'LCB',
+      21: 'RCB',
+      22: 'RB',
+      9: 'CM',
+      10: 'CM',
+      11: 'CM',
+      4: 'CAM',
+      6: 'CAM',
+      1: 'ST'
     }
   }
 };

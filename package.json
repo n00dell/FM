@@ -1,0 +1,11 @@
+{
+    "name": "fm-tactics-simulator",
+    "version": "1.0.0",
+    "description": "Football Manager Tactics Simulator",
+    "scripts": {
+        "start": "npx http-server -p 8080 -c-1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+}

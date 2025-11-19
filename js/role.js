@@ -1,114 +1,81 @@
-// roles.js - Player Role Mapping System
+// Role mapping based on grid positions
+// rowIndex 0-5, spotIndex 0-4
 export const ROLE_MAPPING = {
   0: {
-    0: 'ST',    // Left striker position
-    1: 'ST',    // Center striker position  
-    2: 'ST'     // Right striker position
+    // Row 0: Strikers (3 spots)
+    0: 'LW',
+    1: 'LW',
+    2: 'ST',
+    3: 'RW',
+    4: 'RW'
   },
-  
-  // Row 1: Attacking Midfield/Wingers (5 spots, wingers at ends)
   1: {
-    0: 'LW',    // Left Winger (furthest left)
-    1: 'LAM',   // Left Attacking Mid
-    2: 'CAM',   // Central Attacking Mid
-    3: 'RAM',   // Right Attacking Mid
-    4: 'RW'     // Right Winger (furthest right)
+    // Row 1: Attacking Midfield/Wingers (5 spots)
+    0: 'LW',
+    1: 'LAM',
+    2: 'CAM',
+    3: 'RAM',
+    4: 'RW'
   },
-  
-  // Row 2: Central Midfield (5 spots)
   2: {
-    0: 'LM',    // Left Mid
-    1: 'CM',   // Left Central Mid
-    2: 'CM',    // Central Mid
-    3: 'CM',   // Right Central Mid
-    4: 'RM'     // Right Mid
+    // Row 2: Central Midfield (5 spots)
+    0: 'LM',
+    1: 'LCM',
+    2: 'CM',
+    3: 'RCM',
+    4: 'RM'
   },
-  
-  // Row 3: Defensive Midfielders (5 spots)
   3: {
-    0: 'LWB',   // Left Wing Back
-    1: 'CDM',  // Left Central Defensive Mid
-    2: 'CDM',   // Central Defensive Mid
-    3: 'CDM',  // Right Central Defensive Mid
-    4: 'RWB'    // Right Wing Back
+    // Row 3: Defensive Midfield (5 spots)
+    0: 'LWB',
+    1: 'LDM',
+    2: 'CDM',
+    3: 'RDM',
+    4: 'RWB'
   },
-  
-  // Row 4: Defense (5 spots)
   4: {
-    0: 'LB',    // Left Back
-    1: 'CB',   // Left Center Back
-    2: 'CB',    // Center Back
-    3: 'CB',   // Right Center Back
-    4: 'RB'     // Right Back
+    // Row 4: Defense (5 spots)
+    0: 'LB',
+    1: 'LCB',
+    2: 'CB',
+    3: 'RCB',
+    4: 'RB'
   },
-  
-  // Row 5: Goalkeeper (1 spot)
   5: {
-    0: 'GK'     // Goalkeeper
+    // Row 5: Goalkeeper (1 spot in center)
+    0: 'GK',
+    1: 'GK',
+    2: 'GK',
+    3: 'GK',
+    4: 'GK'
   }
 };
 
-// Alternative role names for different formations/tactics
-export const ROLE_VARIANTS = {
-  // Attacking roles
-  'ST': ['CF', 'F9', 'TM', 'PF'],  // Striker variants
-  'LW': ['LWF', 'IF', 'W'],        // Left Wing variants
-  'RW': ['RWF', 'IF', 'W'],        // Right Wing variants
-  
-  // Midfield roles
-  'CAM': ['AM', 'AP', 'ENG', 'TRE'], // Central Attacking Mid variants
-  'CM': ['BWM', 'B2B', 'DLP', 'MEZ'], // Central Mid variants
-  'CDM': ['DM', 'REG', 'BWM', 'ANC'], // Defensive Mid variants
-  
-  // Defensive roles
-  'CB': ['BPD', 'CD', 'NCB', 'L'],    // Center Back variants
-  'LB': ['WB', 'FB', 'CWB', 'IWB'],   // Left Back variants
-  'RB': ['WB', 'FB', 'CWB', 'IWB'],   // Right Back variants
-  
-  // Goalkeeper
-  'GK': ['SK', 'SWK']                 // Goalkeeper variants
-};
-
-// Function to get role based on spot position
+// Get role for a specific spot based on row and spot indices
 export function getRoleForSpot(rowIndex, spotIndex) {
   const row = ROLE_MAPPING[rowIndex];
-  if (!row) return 'P'; // Default to 'P' for Player if no mapping found
-  
-  const role = row[spotIndex];
-  return role || 'P'; // Default to 'P' if no specific role found
-}
-
-// Function to get role variant (useful for different tactical setups)
-export function getRoleVariant(baseRole, variantIndex = 0) {
-  const variants = ROLE_VARIANTS[baseRole];
-  if (!variants || variantIndex >= variants.length) {
-    return baseRole; // Return base role if no variants or index out of bounds
-  }
-  return variants[variantIndex];
-}
-
-// Function to get all possible roles for a row (useful for UI/formation editor)
-export function getRolesForRow(rowIndex) {
-  const row = ROLE_MAPPING[rowIndex];
-  if (!row) return [];
-  
-  return Object.values(row);
-}
-
-// Enhanced formation definitions with role mapping
-
-
-// Function to get role for a specific formation and spot index
-export function getRoleForFormationSpot(formationName, spotIndex) {
-  const formation = FORMATIONS[formationName];
-  if (!formation || !formation.roles) {
-    // Fallback to position-based role mapping
-    const spot = state.ghostSpots[spotIndex];
-    if (spot) {
-      return getRoleForSpot(spot.rowIndex, spot.spotIndex);
-    }
+  if (!row) {
+    console.warn(`Invalid rowIndex: ${rowIndex}`);
     return 'P';
   }
-  
-  return formation.roles[spotIndex] || 'P';
+
+  const role = row[spotIndex];
+  if (!role) {
+    console.warn(`Invalid spotIndex: ${spotIndex} for rowIndex: ${rowIndex}`);
+    return 'P';
+  }
+
+  return role;
+}
+
+// Get role for a formation-specific spot
+// This is used when applying a formation to get the correct role label
+export function getRoleForFormationSpot(formationRoles, ghostSpotId, rowIndex, spotIndex) {
+  // First check if the formation has a specific role for this spot
+  if (formationRoles && formationRoles[ghostSpotId]) {
+    return formationRoles[ghostSpotId];
+  }
+
+  // Otherwise fall back to the default role mapping
+  return getRoleForSpot(rowIndex, spotIndex);
 }
