@@ -1,169 +1,155 @@
-/* ========== 90'S RETRO PIXELATED THEME ========== */
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P\u0026display=swap');
+/* ========== RETRO GAME THEME (DOS/Early PC) ========== */
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=IBM+Plex+Mono:wght@400;700&display=swap');
 
-/* Override base theme when retro theme is active */
+/* Authentic retro PC game aesthetic */
 body.theme-retro {
-    font-family: 'Press Start 2P', cursive;
-    background: #000000;
-    background-image:
-        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 16, 240, 0.03) 2px, rgba(255, 16, 240, 0.03) 4px),
-        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 255, 255, 0.03) 2px, rgba(0, 255, 255, 0.03) 4px);
-    color: #00FFFF;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
+    font-family: 'IBM Plex Mono', 'VT323', monospace;
+    background: #000080;
+    /* Classic DOS blue */
+    background-image: none;
+    color: #FFFF00;
+    /* DOS yellow */
 }
 
-/* Scanline effect */
-body.theme-retro::after {
+/* Simple pixelated dither pattern */
+body.theme-retro::before {
     content: '';
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: repeating-linear-gradient(0deg,
-            rgba(0, 0, 0, 0.15),
-            rgba(0, 0, 0, 0.15) 1px,
-            transparent 1px,
-            transparent 2px);
+    background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.1) 2px, rgba(0, 0, 0, 0.1) 4px);
     pointer-events: none;
-    z-index: 9999;
-    animation: scanlines 8s linear infinite;
+    z-index: 0;
 }
 
-@keyframes scanlines {
-    0% {
-        transform: translateY(0);
-    }
-
-    100% {
-        transform: translateY(10px);
-    }
+.app-container {
+    position: relative;
+    z-index: 1;
 }
 
-/* CRT glow effect */
-body.theme-retro .app-container {
-    filter: contrast(1.1) brightness(1.05);
-}
-
-/* Header */
+/* Header - DOS style */
 body.theme-retro .header {
-    background: #1a0033;
-    border-bottom: 3px solid #FF10F0;
-    box-shadow: 0 0 20px #FF10F0;
+    background: #0000AA;
+    border-bottom: 4px double #FFFFFF;
+    box-shadow: none;
 }
 
 body.theme-retro .brand-icon {
-    background: #FF10F0;
+    background: #FFFF00;
     border-radius: 0;
-    box-shadow: 0 0 15px #FF10F0, inset 0 0 10px rgba(255, 255, 255, 0.3);
-    animation: pixelPulse 2s ease-in-out infinite;
-}
-
-@keyframes pixelPulse {
-
-    0%,
-    100% {
-        box-shadow: 0 0 15px #FF10F0;
-    }
-
-    50% {
-        box-shadow: 0 0 25px #FF10F0, 0 0 35px #FF10F0;
-    }
+    border: 2px solid #FFFFFF;
+    color: #000080;
+    box-shadow: none;
 }
 
 body.theme-retro .brand-info h1 {
-    color: #00FFFF;
-    text-shadow: 2px 2px 0 #FF10F0, 4px 4px 0 #9D00FF;
-    font-size: 18px;
-    letter-spacing: 2px;
+    font-family: 'VT323', monospace;
+    color: #FFFFFF;
+    text-shadow: 2px 2px 0 #000000;
+    font-size: 32px;
+    letter-spacing: 4px;
 }
 
 body.theme-retro .brand-info span {
-    color: #FF10F0;
-    font-size: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: #00FFFF;
+    /* Cyan */
+    font-size: 12px;
 }
 
-/* Buttons */
+/* Buttons - Simple DOS style */
 body.theme-retro .btn-icon,
 body.theme-retro .btn-primary {
     border-radius: 0;
-    border: 3px solid #00FFFF;
-    background: #000;
-    color: #00FFFF;
-    box-shadow: 0 0 10px #00FFFF;
-    font-family: 'Press Start 2P', cursive;
-    font-size: 10px;
+    border: 2px solid #FFFFFF;
+    background: #00AA00;
+    /* Green */
+    color: #FFFFFF;
+    box-shadow: 3px 3px 0 #000000;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
 }
 
 body.theme-retro .btn-icon:hover,
 body.theme-retro .btn-primary:hover {
-    background: #00FFFF;
-    color: #000;
-    box-shadow: 0 0 20px #00FFFF;
+    background: #00FF00;
+    color: #000000;
+    box-shadow: 3px 3px 0 #000000;
     transform: none;
 }
 
-/* Panels */
+/* Panels - DOS window style */
 body.theme-retro .sidebar-panel {
-    background: #0a0014;
-    border: 3px solid #9D00FF;
+    background: #0000AA;
+    border: 4px double #FFFFFF;
     border-radius: 0;
-    box-shadow: 0 0 20px #9D00FF, inset 0 0 50px rgba(157, 0, 255, 0.1);
+    box-shadow: 4px 4px 0 #000000;
 }
 
 body.theme-retro .panel-header {
-    background: #1a0033;
-    border-bottom: 2px solid #FF10F0;
+    background: #000080;
+    border-bottom: 2px solid #FFFFFF;
 }
 
 body.theme-retro .panel-header h2 {
-    color: #FF10F0;
-    font-size: 12px;
+    font-family: 'VT323', monospace;
+    color: #FFFF00;
+    font-size: 18px;
 }
 
 body.theme-retro .panel-header i {
     color: #00FFFF;
-    filter: drop-shadow(0 0 8px #00FFFF);
+    filter: none;
 }
 
 /* Formation Buttons */
 body.theme-retro .formation-btn {
-    background: #000;
-    border: 2px solid #00FFFF;
+    background: #000080;
+    border: 2px solid #AAAAAA;
     border-radius: 0;
 }
 
 body.theme-retro .formation-btn:hover {
-    background: #1a1a33;
-    border-color: #FF10F0;
-    box-shadow: 0 0 10px #FF10F0;
+    background: #0000AA;
+    border-color: #FFFFFF;
+    box-shadow: none;
     transform: none;
 }
 
 body.theme-retro .formation-btn.active {
-    background: #FF10F0;
-    border-color: #00FFFF;
-    color: #000;
-    box-shadow: 0 0 15px #FF10F0;
+    background: #FFFF00;
+    border-color: #FFFFFF;
+    color: #000000;
+    box-shadow: none;
 }
 
 body.theme-retro .formation-btn.active strong,
 body.theme-retro .formation-btn.active small {
-    color: #000;
+    color: #000000;
 }
 
-/* Pitch */
+body.theme-retro .formation-info strong {
+    font-family: 'VT323', monospace;
+    color: #FFFFFF;
+}
+
+body.theme-retro .formation-info small {
+    color: #AAAAAA;
+}
+
+/* Pitch - Simple DOS graphics */
 body.theme-retro .pitch-container {
-    background: #001a00;
-    border: 4px solid #00FF00;
+    background: #008000;
+    /* DOS green */
+    border: 4px solid #FFFFFF;
     border-radius: 0;
-    box-shadow: 0 0 30px #00FF00, inset 0 0 100px rgba(0, 255, 0, 0.1);
-    position: relative;
+    box-shadow: 4px 4px 0 #000000;
 }
 
-/* Pixel grid overlay */
+/* Simple pixel grid */
 body.theme-retro .pitch-container::before {
     content: '';
     position: absolute;
@@ -172,54 +158,58 @@ body.theme-retro .pitch-container::before {
     right: 0;
     bottom: 0;
     background-image:
-        repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(0, 255, 0, 0.05) 8px, rgba(0, 255, 0, 0.05) 9px),
-        repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(0, 255, 0, 0.05) 8px, rgba(0, 255, 0, 0.05) 9px);
+        repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(255, 255, 255, 0.1) 10px, rgba(255, 255, 255, 0.1) 11px),
+        repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(255, 255, 255, 0.1) 10px, rgba(255, 255, 255, 0.1) 11px);
     pointer-events: none;
 }
 
 /* Phase Tabs */
 body.theme-retro .phase-tab {
     border-radius: 0;
-    border: 2px solid #00FFFF;
-    background: #000;
-    color: #00FFFF;
-    font-size: 10px;
+    border: 2px solid #FFFFFF;
+    background: #000080;
+    color: #FFFFFF;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
 }
 
 body.theme-retro .phase-tab.active {
-    background: #00FFFF;
-    color: #000;
-    box-shadow: 0 0 10px #00FFFF;
+    background: #FFFF00;
+    color: #000000;
+    box-shadow: none;
 }
 
 /* Sliders */
 body.theme-retro .slider {
-    background: #1a1a33;
-    border: 2px solid #9D00FF;
+    background: #000080;
+    border: 2px solid #FFFFFF;
     border-radius: 0;
 }
 
 body.theme-retro .slider::-webkit-slider-thumb {
-    background: #FF10F0;
+    background: #FFFF00;
     border-radius: 0;
-    width: 16px;
-    height: 16px;
-    border: 2px solid #00FFFF;
-    box-shadow: 0 0 10px #FF10F0;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #FFFFFF;
+    box-shadow: none;
 }
 
-/* Text Colors */
+/* Text Colors - DOS palette */
 body.theme-retro .control-header label {
-    color: #00FFFF;
-    font-size: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: #FFFFFF;
+    font-size: 11px;
 }
 
 body.theme-retro .control-header .value {
-    color: #FF10F0;
-    text-shadow: 0 0 8px #FF10F0;
+    font-family: 'VT323', monospace;
+    color: #00FF00;
+    text-shadow: none;
 }
 
 body.theme-retro .control-labels {
-    color: #9D00FF;
-    font-size: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: #AAAAAA;
+    font-size: 10px;
 }

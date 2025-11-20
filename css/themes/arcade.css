@@ -1,0 +1,225 @@
+/* ========== 90'S RETRO PIXELATED THEME ========== */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P\u0026display=swap');
+
+/* Override base theme when retro theme is active */
+body.theme-retro {
+    font-family: 'Press Start 2P', cursive;
+    background: #000000;
+    background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 16, 240, 0.03) 2px, rgba(255, 16, 240, 0.03) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 255, 255, 0.03) 2px, rgba(0, 255, 255, 0.03) 4px);
+    color: #00FFFF;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+/* Scanline effect */
+body.theme-retro::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(0deg,
+            rgba(0, 0, 0, 0.15),
+            rgba(0, 0, 0, 0.15) 1px,
+            transparent 1px,
+            transparent 2px);
+    pointer-events: none;
+    z-index: 9999;
+    animation: scanlines 8s linear infinite;
+}
+
+@keyframes scanlines {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(10px);
+    }
+}
+
+/* CRT glow effect */
+body.theme-retro .app-container {
+    filter: contrast(1.1) brightness(1.05);
+}
+
+/* Header */
+body.theme-retro .header {
+    background: #1a0033;
+    border-bottom: 3px solid #FF10F0;
+    box-shadow: 0 0 20px #FF10F0;
+}
+
+body.theme-retro .brand-icon {
+    background: #FF10F0;
+    border-radius: 0;
+    box-shadow: 0 0 15px #FF10F0, inset 0 0 10px rgba(255, 255, 255, 0.3);
+    animation: pixelPulse 2s ease-in-out infinite;
+}
+
+@keyframes pixelPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 15px #FF10F0;
+    }
+
+    50% {
+        box-shadow: 0 0 25px #FF10F0, 0 0 35px #FF10F0;
+    }
+}
+
+body.theme-retro .brand-info h1 {
+    color: #00FFFF;
+    text-shadow: 2px 2px 0 #FF10F0, 4px 4px 0 #9D00FF;
+    font-size: 18px;
+    letter-spacing: 2px;
+}
+
+body.theme-retro .brand-info span {
+    color: #FF10F0;
+    font-size: 8px;
+}
+
+/* Buttons */
+body.theme-retro .btn-icon,
+body.theme-retro .btn-primary {
+    border-radius: 0;
+    border: 3px solid #00FFFF;
+    background: #000;
+    color: #00FFFF;
+    box-shadow: 0 0 10px #00FFFF;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+}
+
+body.theme-retro .btn-icon:hover,
+body.theme-retro .btn-primary:hover {
+    background: #00FFFF;
+    color: #000;
+    box-shadow: 0 0 20px #00FFFF;
+    transform: none;
+}
+
+/* Panels */
+body.theme-retro .sidebar-panel {
+    background: #0a0014;
+    border: 3px solid #9D00FF;
+    border-radius: 0;
+    box-shadow: 0 0 20px #9D00FF, inset 0 0 50px rgba(157, 0, 255, 0.1);
+}
+
+body.theme-retro .panel-header {
+    background: #1a0033;
+    border-bottom: 2px solid #FF10F0;
+}
+
+body.theme-retro .panel-header h2 {
+    color: #FF10F0;
+    font-size: 12px;
+}
+
+body.theme-retro .panel-header i {
+    color: #00FFFF;
+    filter: drop-shadow(0 0 8px #00FFFF);
+}
+
+/* Formation Buttons */
+body.theme-retro .formation-btn {
+    background: #000;
+    border: 2px solid #00FFFF;
+    border-radius: 0;
+}
+
+body.theme-retro .formation-btn:hover {
+    background: #1a1a33;
+    border-color: #FF10F0;
+    box-shadow: 0 0 10px #FF10F0;
+    transform: none;
+}
+
+body.theme-retro .formation-btn.active {
+    background: #FF10F0;
+    border-color: #00FFFF;
+    color: #000;
+    box-shadow: 0 0 15px #FF10F0;
+}
+
+body.theme-retro .formation-btn.active strong,
+body.theme-retro .formation-btn.active small {
+    color: #000;
+}
+
+/* Pitch */
+body.theme-retro .pitch-container {
+    background: #001a00;
+    border: 4px solid #00FF00;
+    border-radius: 0;
+    box-shadow: 0 0 30px #00FF00, inset 0 0 100px rgba(0, 255, 0, 0.1);
+    position: relative;
+}
+
+/* Pixel grid overlay */
+body.theme-retro .pitch-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(0, 255, 0, 0.05) 8px, rgba(0, 255, 0, 0.05) 9px),
+        repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(0, 255, 0, 0.05) 8px, rgba(0, 255, 0, 0.05) 9px);
+    pointer-events: none;
+}
+
+/* Phase Tabs */
+body.theme-retro .phase-tab {
+    border-radius: 0;
+    border: 2px solid #00FFFF;
+    background: #000;
+    color: #00FFFF;
+    font-size: 10px;
+}
+
+body.theme-retro .phase-tab.active {
+    background: #00FFFF;
+    color: #000;
+    box-shadow: 0 0 10px #00FFFF;
+}
+
+/* Sliders */
+body.theme-retro .slider {
+    background: #1a1a33;
+    border: 2px solid #9D00FF;
+    border-radius: 0;
+}
+
+body.theme-retro .slider::-webkit-slider-thumb {
+    background: #FF10F0;
+    border-radius: 0;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #00FFFF;
+    box-shadow: 0 0 10px #FF10F0;
+}
+
+/* Text Colors */
+body.theme-retro .control-header label {
+    color: #00FFFF;
+    font-size: 8px;
+}
+
+body.theme-retro .control-header .value {
+    color: #FF10F0;
+    text-shadow: 0 0 8px #FF10F0;
+}
+
+body.theme-retro .control-labels {
+    color: #9D00FF;
+    font-size: 8px;
+}

@@ -5,25 +5,110 @@ export const THEMES = {
         name: 'Premium Glass',
         class: 'theme-premium',
         description: 'Modern glassmorphism with vibrant gradients',
-        cssFile: null // Uses default style.css
+        cssFile: null, // Uses default style.css
+        playerStyle: {
+            type: 'gradient',
+            stroke: 'white',
+            strokeWidth: 2,
+            shadow: true,
+            font: 'Outfit'
+        }
+    },
+    arcade: {
+        name: 'Arcade',
+        class: 'theme-arcade',
+        description: 'Neon 80s arcade with CRT effects',
+        cssFile: 'css/themes/arcade.css',
+        playerStyle: {
+            type: 'pixel',
+            stroke: '#00FFFF', // Cyan border
+            strokeWidth: 3,
+            shadow: false,
+            font: '"Press Start 2P", monospace',
+            shape: 'square'
+        }
     },
     retro: {
-        name: "90's Retro",
+        name: 'Retro Game',
         class: 'theme-retro',
-        description: 'Pixelated 8-bit arcade aesthetic with neon colors',
-        cssFile: 'css/themes/retro.css'
+        description: 'Classic DOS game aesthetic',
+        cssFile: 'css/themes/retro.css',
+        playerStyle: {
+            type: 'solid',
+            stroke: '#FFFFFF',
+            strokeWidth: 2,
+            shadow: true, // Hard shadow
+            font: '"VT323", monospace',
+            shape: 'square'
+        }
     },
     chalkboard: {
         name: 'Chalkboard',
         class: 'theme-chalkboard',
-        description: 'Hand-drawn chalk tactics board',
-        cssFile: 'css/themes/chalkboard.css'
+        description: 'Hand-drawn chalk tactics',
+        cssFile: 'css/themes/chalkboard.css',
+        playerStyle: {
+            type: 'chalk',
+            stroke: 'white',
+            strokeWidth: 3,
+            shadow: false,
+            font: '"Permanent Marker", cursive',
+            fill: 'transparent' // Hollow chalk circles
+        }
     },
     whiteboard: {
         name: 'Whiteboard',
         class: 'theme-whiteboard',
-        description: 'Professional tactical whiteboard with magnetic dots',
-        cssFile: 'css/themes/whiteboard.css'
+        description: 'Professional whiteboard with frame',
+        cssFile: 'css/themes/whiteboard.css',
+        playerStyle: {
+            type: 'marker',
+            stroke: 'none',
+            strokeWidth: 0,
+            shadow: true,
+            font: 'Inter, sans-serif',
+            fill: 'solid' // Solid marker dots
+        }
+    },
+    jumbotron: {
+        name: 'Stadium Display',
+        class: 'theme-jumbotron',
+        description: 'Big screen stadium graphics',
+        cssFile: 'css/themes/jumbotron.css',
+        playerStyle: {
+            type: 'led',
+            stroke: '#00D4FF',
+            strokeWidth: 2,
+            shadow: true, // Glow effect
+            font: 'Bebas Neue, sans-serif'
+        }
+    },
+    notebook: {
+        name: 'Tactical Notebook',
+        class: 'theme-notebook',
+        description: 'Hand-sketched notebook',
+        cssFile: 'css/themes/notebook.css',
+        playerStyle: {
+            type: 'sketch',
+            stroke: '#2C1810', // Ink color
+            strokeWidth: 2,
+            shadow: false,
+            font: '"Indie Flower", cursive',
+            fill: 'hatch' // Hatching effect
+        }
+    },
+    broadcast: {
+        name: 'TV Broadcast',
+        class: 'theme-broadcast',
+        description: 'Match broadcast graphics',
+        cssFile: 'css/themes/broadcast.css',
+        playerStyle: {
+            type: 'tv',
+            stroke: '#FFD700', // Gold border
+            strokeWidth: 2,
+            shadow: true,
+            font: 'Oswald, sans-serif'
+        }
     }
 };
 
@@ -33,7 +118,6 @@ let loadedThemeLinks = new Set();
 
 /**
  * Apply a theme to the application
- * @param {string} themeName - Name of the theme to apply (premium, retro, chalkboard, whiteboard)
  */
 export function applyTheme(themeName) {
     const theme = THEMES[themeName];
@@ -71,27 +155,15 @@ export function applyTheme(themeName) {
     }));
 }
 
-/**
- * Get the currently active theme
- * @returns {string} Current theme name
- */
 export function getCurrentTheme() {
     return currentTheme;
 }
 
-/**
- * Initialize theme system on page load
- */
 export function initTheme() {
-    // Load saved theme or use default
     const savedTheme = localStorage.getItem(STORAGE_KEY) || 'premium';
     applyTheme(savedTheme);
 }
 
-/**
- * Get all available themes
- * @returns {Object} All theme definitions
- */
 export function getAvailableThemes() {
     return THEMES;
 }

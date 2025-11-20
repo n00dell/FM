@@ -1,0 +1,249 @@
+/* ========== TV BROADCAST THEME ========== */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700;900&family=Oswald:wght@400;600&display=swap');
+
+/* Broadcast studio background */
+body.theme-broadcast {
+    font-family: 'Roboto Condensed', sans-serif;
+    background: #0F1419;
+    background-image:
+        linear-gradient(135deg, #0F1419 0%, #1A2332 100%);
+    color: #FFFFFF;
+}
+
+/* Broadcast overlay scanlines */
+body.theme-broadcast::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(0deg,
+            rgba(0, 0, 0, 0.03) 0px,
+            rgba(0, 0, 0, 0.03) 1px,
+            transparent 1px,
+            transparent 2px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.app-container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Header - Broadcast bar style */
+body.theme-broadcast .header {
+    background: linear-gradient(90deg, #C8102E 0%, #8B0A1F 100%);
+    /* Broadcast red */
+    border-bottom: 4px solid #FFD700;
+    /* Gold accent */
+    box-shadow: 0 4px 20px rgba(200, 16, 46, 0.5);
+}
+
+body.theme-broadcast .brand-icon {
+    background: #FFD700;
+    border-radius: 4px;
+    border: 2px solid #FFFFFF;
+    color: #C8102E;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+}
+
+body.theme-broadcast .brand-info h1 {
+    font-family: 'Oswald', sans-serif;
+    color: #FFFFFF;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+body.theme-broadcast .brand-info span {
+    color: #FFD700;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+/* Buttons - Broadcast graphics style */
+body.theme-broadcast .btn-icon,
+body.theme-broadcast .btn-primary {
+    background: linear-gradient(180deg, #2A3F5F, #1A2F4F);
+    border: 2px solid #FFD700;
+    color: #FFFFFF;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+body.theme-broadcast .btn-icon:hover,
+body.theme-broadcast .btn-primary:hover {
+    background: linear-gradient(180deg, #C8102E, #8B0A1F);
+    border-color: #FFFFFF;
+    box-shadow: 0 6px 16px rgba(200, 16, 46, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Panels - Broadcast graphics boxes */
+body.theme-broadcast .sidebar-panel {
+    background: linear-gradient(180deg, rgba(26, 47, 79, 0.95), rgba(15, 20, 25, 0.95));
+    border: 3px solid #FFD700;
+    border-radius: 0;
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 215, 0, 0.3);
+    position: relative;
+}
+
+/* Corner accent */
+body.theme-broadcast .sidebar-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, transparent 50%, #C8102E 50%);
+    clip-path: polygon(100% 0, 100% 100%, 0 0);
+}
+
+body.theme-broadcast .panel-header {
+    background: linear-gradient(90deg, rgba(200, 16, 46, 0.3), transparent);
+    border-bottom: 3px solid #FFD700;
+}
+
+body.theme-broadcast .panel-header h2 {
+    font-family: 'Oswald', sans-serif;
+    color: #FFD700;
+    font-size: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+body.theme-broadcast .panel-header i {
+    color: #FFD700;
+    filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.6));
+}
+
+/* Formation Buttons */
+body.theme-broadcast .formation-btn {
+    background: rgba(26, 47, 79, 0.6);
+    border: 2px solid #3A5F8F;
+    border-radius: 0;
+}
+
+body.theme-broadcast .formation-btn:hover {
+    background: rgba(200, 16, 46, 0.2);
+    border-color: #FFD700;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
+}
+
+body.theme-broadcast .formation-btn.active {
+    background: linear-gradient(135deg, #C8102E, #8B0A1F);
+    border-color: #FFD700;
+    color: #FFFFFF;
+    box-shadow: 0 0 16px rgba(200, 16, 46, 0.6);
+}
+
+body.theme-broadcast .formation-btn.active strong {
+    font-family: 'Oswald', sans-serif;
+    color: #FFD700;
+}
+
+body.theme-broadcast .formation-btn.active small {
+    color: #FFFFFF;
+}
+
+body.theme-broadcast .formation-info strong {
+    font-family: 'Oswald', sans-serif;
+    color: #FFFFFF;
+}
+
+body.theme-broadcast .formation-info small {
+    color: #AAA;
+}
+
+/* Pitch - Broadcast field view */
+body.theme-broadcast .pitch-container {
+    background: linear-gradient(180deg, #0A5010 0%, #073A0C 100%);
+    border: 4px solid #FFD700;
+    border-radius: 0;
+    box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.6),
+        inset 0 0 80px rgba(0, 0, 0, 0.4);
+    position: relative;
+}
+
+/* Broadcast grid overlay */
+body.theme-broadcast .pitch-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(255, 215, 0, 0.03) 30px, rgba(255, 215, 0, 0.03) 31px),
+        repeating-linear-gradient(90deg, transparent, transparent 30px, rgba(255, 215, 0, 0.03) 30px, rgba(255, 215, 0, 0.03) 31px);
+    pointer-events: none;
+}
+
+/* Phase Tabs */
+body.theme-broadcast .phase-tab {
+    background: linear-gradient(180deg, #2A3F5F, #1A2F4F);
+    border: 2px solid #3A5F8F;
+    border-radius: 0;
+    color: #FFFFFF;
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+body.theme-broadcast .phase-tab.active {
+    background: linear-gradient(135deg, #C8102E, #8B0A1F);
+    border-color: #FFD700;
+    color: #FFD700;
+    box-shadow: 0 4px 12px rgba(200, 16, 46, 0.5);
+}
+
+/* Sliders */
+body.theme-broadcast .slider {
+    background: #1A2F4F;
+    border: 2px solid #3A5F8F;
+    border-radius: 4px;
+}
+
+body.theme-broadcast .slider::-webkit-slider-thumb {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    border: 2px solid #FFFFFF;
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.5);
+}
+
+/* Text - Broadcast graphics style */
+body.theme-broadcast .control-header label {
+    font-family: 'Roboto Condensed', sans-serif;
+    color: #FFD700;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+body.theme-broadcast .control-header .value {
+    font-family: 'Oswald', sans-serif;
+    color: #FFFFFF;
+    font-weight: 900;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+}
+
+body.theme-broadcast .control-labels {
+    color: #888;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+}

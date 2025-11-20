@@ -72,6 +72,35 @@
     color: #3b82f6;
 }
 
+/* Improved Simulate Button Styling */
+.btn-primary {
+    height: 44px;
+    padding: 0 20px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 13px;
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+    white-space: nowrap;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+}
+
+.btn-primary i {
+    font-size: 14px;
+}
+
 /* Premium Theme Enhancements */
 body.theme-premium {
     position: relative;

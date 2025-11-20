@@ -1,0 +1,241 @@
+/* ========== STADIUM JUMBOTRON/BIG SCREEN THEME ========== */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;700&display=swap');
+
+/* Stadium atmosphere */
+body.theme-jumbotron {
+    font-family: 'Rajdhani', sans-serif;
+    background: #0A0A0A;
+    background-image:
+        radial-gradient(circle at 50% 100%, rgba(30, 30, 30, 0.8) 0%, transparent 70%),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 1px, transparent 1px, transparent 40px);
+    color: #FFFFFF;
+}
+
+/* LED screen glow effect */
+body.theme-jumbotron::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 50% 50%, rgba(0, 200, 255, 0.05) 0%, transparent 60%);
+    animation: stadiumPulse 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes stadiumPulse {
+
+    0%,
+    100% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+.app-container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Header - LED display style */
+body.theme-jumbotron .header {
+    background: linear-gradient(180deg, #1A1A1A 0%, #0A0A0A 100%);
+    border-bottom: 3px solid #00D4FF;
+    box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+}
+
+body.theme-jumbotron .brand-icon {
+    background: linear-gradient(135deg, #00D4FF, #0080FF);
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
+    animation: iconGlow 2s ease-in-out infinite;
+}
+
+@keyframes iconGlow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
+    }
+
+    50% {
+        box-shadow: 0 0 30px rgba(0, 212, 255, 0.9);
+    }
+}
+
+body.theme-jumbotron .brand-info h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    color: #FFFFFF;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.8), 0 0 20px rgba(0, 212, 255, 0.4);
+    font-size: 32px;
+    letter-spacing: 4px;
+}
+
+body.theme-jumbotron .brand-info span {
+    color: #00D4FF;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Buttons - LED style */
+body.theme-jumbotron .btn-icon,
+body.theme-jumbotron .btn-primary {
+    background: linear-gradient(135deg, #1A1A1A, #2A2A2A);
+    border: 2px solid #00D4FF;
+    color: #00D4FF;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+body.theme-jumbotron .btn-icon:hover,
+body.theme-jumbotron .btn-primary:hover {
+    background: linear-gradient(135deg, #00D4FF, #0080FF);
+    color: #000000;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
+    transform: translateY(-2px);
+}
+
+/* Panels - LED screen sections */
+body.theme-jumbotron .sidebar-panel {
+    background: linear-gradient(180deg, rgba(20, 20, 20, 0.95) 0%, rgba(10, 10, 10, 0.95) 100%);
+    border: 2px solid #00D4FF;
+    border-radius: 16px;
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.6),
+        inset 0 0 40px rgba(0, 212, 255, 0.1),
+        0 0 20px rgba(0, 212, 255, 0.2);
+}
+
+body.theme-jumbotron .panel-header {
+    background: linear-gradient(90deg, rgba(0, 212, 255, 0.2), transparent);
+    border-bottom: 2px solid #00D4FF;
+}
+
+body.theme-jumbotron .panel-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    color: #00D4FF;
+    font-size: 22px;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
+}
+
+body.theme-jumbotron .panel-header i {
+    color: #00D4FF;
+    filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.8));
+}
+
+/* Formation Buttons */
+body.theme-jumbotron .formation-btn {
+    background: rgba(26, 26, 26, 0.8);
+    border: 2px solid #333;
+}
+
+body.theme-jumbotron .formation-btn:hover {
+    background: rgba(0, 212, 255, 0.1);
+    border-color: #00D4FF;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+}
+
+body.theme-jumbotron .formation-btn.active {
+    background: linear-gradient(135deg, #00D4FF, #0080FF);
+    border-color: #00D4FF;
+    color: #000000;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
+}
+
+body.theme-jumbotron .formation-btn.active strong,
+body.theme-jumbotron .formation-btn.active small {
+    color: #000000;
+}
+
+body.theme-jumbotron .formation-info strong {
+    font-family: 'Bebas Neue', sans-serif;
+    color: #FFFFFF;
+}
+
+body.theme-jumbotron .formation-info small {
+    color: #00D4FF;
+}
+
+/* Pitch - LED screen display */
+body.theme-jumbotron .pitch-container {
+    background: linear-gradient(180deg, #003300 0%, #001a00 100%);
+    border: 3px solid #00D4FF;
+    border-radius: 20px;
+    box-shadow:
+        0 0 40px rgba(0, 212, 255, 0.4),
+        inset 0 0 60px rgba(0, 212, 255, 0.1);
+}
+
+/* LED pixel grid */
+body.theme-jumbotron .pitch-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0, 212, 255, 0.03) 3px, rgba(0, 212, 255, 0.03) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(0, 212, 255, 0.03) 3px, rgba(0, 212, 255, 0.03) 4px);
+    pointer-events: none;
+}
+
+/* Phase Tabs */
+body.theme-jumbotron .phase-tab {
+    background: rgba(26, 26, 26, 0.8);
+    border: 2px solid #333;
+    color: #00D4FF;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+
+body.theme-jumbotron .phase-tab.active {
+    background: linear-gradient(135deg, #00D4FF, #0080FF);
+    border-color: #00D4FF;
+    color: #000000;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
+}
+
+/* Sliders */
+body.theme-jumbotron .slider {
+    background: #1A1A1A;
+    border: 1px solid #333;
+}
+
+body.theme-jumbotron .slider::-webkit-slider-thumb {
+    background: linear-gradient(135deg, #00D4FF, #0080FF);
+    border: 2px solid #000;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
+}
+
+/* Text - LED display style */
+body.theme-jumbotron .control-header label {
+    font-family: 'Rajdhani', sans-serif;
+    color: #00D4FF;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+body.theme-jumbotron .control-header .value {
+    font-family: 'Bebas Neue', sans-serif;
+    color: #FFFFFF;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+}
+
+body.theme-jumbotron .control-labels {
+    color: #666;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 500;
+}

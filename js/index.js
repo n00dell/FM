@@ -2,7 +2,7 @@ import Konva from 'https://esm.sh/konva';
 import { FORMATIONS } from './formation.js';
 import { getRoleForSpot, getRoleForFormationSpot } from './role.js';
 import { MOVEMENT_PATTERNS, getMovementForRole } from './movement.js';
-import { initTheme, applyTheme, getCurrentTheme } from './themes.js';
+import { initTheme, applyTheme, getCurrentTheme, THEMES } from './themes.js';
 
 // === GLOBAL STATE ===
 const state = {
@@ -317,40 +317,83 @@ function checkIfPlayersAreAdjacent(players) {
 function createPlayer(x, y, role = 'P', color = '#3b82f6') {
   const group = new Konva.Group({ x, y, draggable: true });
 
-  // Glow effect
-  const glow = new Konva.Circle({
-    radius: 22,
-    fill: color,
-    opacity: 0,
-    listening: false
-  });
+  // Get current theme data
+  const currentThemeName = getCurrentTheme();
+  const themeData = THEMES[currentThemeName] || THEMES.premium;
+  const style = themeData.playerStyle || THEMES.premium.playerStyle;
 
-  const circle = new Konva.Circle({
-    radius: 18,
-    fill: color,
-    stroke: 'white',
-    strokeWidth: 2,
-    shadowColor: color,
-    shadowBlur: 10,
-    shadowOpacity: 0.5
-  });
+  // Create visual elements based on theme
+  let mainShape, glow, label;
 
+  // 1. GLOW EFFECT
+  if (style.shadow) {
+    glow = new Konva.Circle({
+      radius: 22,
+      fill: color,
+      opacity: 0,
+      listening: false,
+      name: 'glow'
+    });
+  } else {
+    // Invisible placeholder for consistent structure
+    glow = new Konva.Circle({
+      radius: 22,
+      fill: 'transparent',
+      opacity: 0,
+      listening: false,
+      name: 'glow'
+    });
+  }
+
+  // 2. MAIN PLAYER SHAPE
+  if (style.shape === 'square') {
+    // Retro/Arcade style
+    mainShape = new Konva.Rect({
+      width: 36,
+      height: 36,
+      offsetX: 18,
+      offsetY: 18,
+      fill: style.type === 'pixel' ? color : 'transparent',
+      stroke: style.stroke,
+      strokeWidth: style.strokeWidth,
+      shadowColor: color,
+      shadowBlur: style.type === 'pixel' ? 10 : 0,
+      shadowOpacity: 0.5,
+      name: 'mainShape'
+    });
+  } else {
+    // Standard Circle style (Premium, Whiteboard, Chalkboard)
+    mainShape = new Konva.Circle({
+      radius: 18,
+      fill: style.type === 'chalk' ? 'transparent' : color,
+      stroke: style.stroke,
+      strokeWidth: style.strokeWidth,
+      shadowColor: 'black',
+      shadowBlur: style.type === 'marker' ? 5 : (style.type === 'led' ? 15 : 0),
+      shadowOpacity: 0.3,
+      dash: style.type === 'chalk' ? [15, 5] : null, // Chalk effect
+      name: 'mainShape'
+    });
+  }
+
+  // 3. LABEL TEXT
   const fontSize = role.length > 3 ? 9 : (role.length > 2 ? 10 : 11);
-  const label = new Konva.Text({
+  label = new Konva.Text({
     text: role,
     fontSize: fontSize,
-    fontFamily: 'Outfit',
+    fontFamily: style.font.split(',')[0].replace(/['"]/g, ''), // Extract primary font
     fontStyle: 'bold',
-    fill: 'white',
+    fill: style.type === 'chalk' ? 'white' : (style.type === 'marker' ? 'white' : 'white'),
     align: 'center',
     verticalAlign: 'middle',
     width: 36,
     height: 36,
     offsetX: 18,
-    offsetY: 18
+    offsetY: 18,
+    name: 'label'
   });
 
-  group.add(glow, circle, label);
+  group.add(glow, mainShape, label);
   group.currentSpot = null;
   group.playerRole = role;
 
@@ -358,24 +401,49 @@ function createPlayer(x, y, role = 'P', color = '#3b82f6') {
 
   group.on('mouseenter', () => {
     document.body.style.cursor = 'pointer';
-    new Konva.Tween({
-      node: glow,
-      duration: 0.2,
-      opacity: 0.4,
-      scaleX: 1.2,
-      scaleY: 1.2
-    }).play();
+
+    // Theme-specific hover effect
+    if (style.type === 'pixel' || style.type === 'led') {
+      // Glitch/Pulse effect for digital themes
+      new Konva.Tween({
+        node: mainShape,
+        duration: 0.1,
+        shadowBlur: 20,
+        scaleX: 1.1,
+        scaleY: 1.1
+      }).play();
+    } else {
+      // Standard lift effect
+      new Konva.Tween({
+        node: glow,
+        duration: 0.2,
+        opacity: 0.4,
+        scaleX: 1.2,
+        scaleY: 1.2
+      }).play();
+    }
   });
 
   group.on('mouseleave', () => {
     document.body.style.cursor = 'default';
-    new Konva.Tween({
-      node: glow,
-      duration: 0.2,
-      opacity: 0,
-      scaleX: 1,
-      scaleY: 1
-    }).play();
+
+    if (style.type === 'pixel' || style.type === 'led') {
+      new Konva.Tween({
+        node: mainShape,
+        duration: 0.2,
+        shadowBlur: style.type === 'pixel' ? 10 : 15,
+        scaleX: 1,
+        scaleY: 1
+      }).play();
+    } else {
+      new Konva.Tween({
+        node: glow,
+        duration: 0.2,
+        opacity: 0,
+        scaleX: 1,
+        scaleY: 1
+      }).play();
+    }
   });
 
   group.on('dragstart', () => {
@@ -436,15 +504,25 @@ function createPlayer(x, y, role = 'P', color = '#3b82f6') {
         group.playerRole = finalRole;
 
         //Update label 
-        const textNode = group.findOne('Text');
+        const textNode = group.findOne('.label');
         textNode.text(finalRole);
         textNode.fontSize(finalRole.length > 3 ? 9 : (finalRole.length > 2 ? 10 : 11));
 
-        const circleNode = group.findOne('Circle');
-        circleNode.fill(closest.RoleColor);
-        circleNode.shadowColor(closest.RoleColor);
+        // Update main shape color (works for both Circle and Rect)
+        const mainShape = group.findOne('.mainShape');
+        if (mainShape) {
+          mainShape.fill(closest.RoleColor);
+          // Only update shadow color if it has one
+          if (mainShape.shadowColor()) {
+            mainShape.shadowColor(closest.RoleColor);
+          }
+        }
 
-        group.children[0].fill(closest.RoleColor); // Update glow color
+        // Update glow color if it exists
+        const glow = group.findOne('.glow');
+        if (glow) {
+          glow.fill(closest.RoleColor);
+        }
 
         state.layers.players.draw();
       }, 350); // Allow time for position update
@@ -800,15 +878,12 @@ document.addEventListener('DOMContentLoaded', () => {
         option.classList.add('active');
       });
     });
-
-    // Set initial active theme option
-    const currentTheme = getCurrentTheme();
-    themeOptions.forEach(opt => {
-      if (opt.dataset.theme === currentTheme) {
-        opt.classList.add('active');
-      }
-    });
   }
+
+  // Listen for theme changes to update player visuals
+  window.addEventListener('themeChanged', () => {
+    updateAllPlayerVisuals();
+  });
 
   // Simulate Movement button (placeholder)
   const simulateMovementBtn = document.getElementById('simulate-movement-btn');
@@ -825,3 +900,39 @@ document.addEventListener('DOMContentLoaded', () => {
     simBtn.addEventListener('click', simulateMovement);
   }
 });
+
+// Helper to redraw all players with new theme style
+function updateAllPlayerVisuals() {
+  // Store current player data
+  const playerData = state.players.map(p => ({
+    x: p.x(),
+    y: p.y(),
+    role: p.playerRole,
+    spot: p.currentSpot,
+    color: p.currentSpot ? p.currentSpot.RoleColor : '#3b82f6'
+  }));
+
+  // Remove all existing players
+  state.players.forEach(p => p.destroy());
+  state.players = [];
+  state.layers.players.removeChildren();
+
+  // Recreate players with new style
+  playerData.forEach(data => {
+    const player = createPlayer(data.x, data.y, data.role, data.color);
+    player.currentSpot = data.spot;
+    player.playerRole = data.role;
+
+    // Ensure text and colors are correct
+    const textNode = player.findOne('.label');
+    if (textNode) {
+      textNode.text(data.role);
+      textNode.fontSize(data.role.length > 3 ? 9 : (data.role.length > 2 ? 10 : 11));
+    }
+
+    state.layers.players.add(player);
+    state.players.push(player);
+  });
+
+  state.layers.players.draw();
+}
