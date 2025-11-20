@@ -1,6 +1,9 @@
 import Konva from 'https://esm.sh/konva';
 import { FORMATIONS } from './formation.js';
 import { getRoleForSpot, getRoleForFormationSpot } from './role.js';
+import { MOVEMENT_PATTERNS, getMovementForRole } from './movement.js';
+import { initTheme, applyTheme, getCurrentTheme } from './themes.js';
+
 // === GLOBAL STATE ===
 const state = {
   stage: null,
@@ -8,62 +11,73 @@ const state = {
   ghostSpots: [],
   players: [],
   dimensions: {},
-  currentFormation: '433'
+  currentFormation: '433',
+  isSimulating: false
 };
-
 
 // === FIELD INIT ===
 function initStage() {
+  // Initial setup with a logical size (we'll scale this to fit)
+  const logicalWidth = 800;
+  const logicalHeight = 700;
+
   const stage = new Konva.Stage({
     container: 'konva-holder',
-    width: 1000,
-    height: 700
+    width: logicalWidth,
+    height: logicalHeight
   });
+
   const fieldWidth = 400;
   const fieldHeight = 600;
-  const offsetX = (stage.width() - fieldWidth) / 2;
-  const offsetY = (stage.height() - fieldHeight) / 2;
+  // Center field in logical space
+  const offsetX = (logicalWidth - fieldWidth) / 2;
+  const offsetY = (logicalHeight - fieldHeight) / 2;
   const cx = offsetX + fieldWidth / 2;
   const cy = offsetY + fieldHeight / 2;
 
   // Store global dims
   state.stage = stage;
-  state.dimensions = { fieldWidth, fieldHeight, offsetX, offsetY, cx, cy };
+  state.dimensions = { fieldWidth, fieldHeight, offsetX, offsetY, cx, cy, logicalWidth, logicalHeight };
   state.layers.field = new Konva.Layer();
   state.layers.formation = new Konva.Layer();
   state.layers.players = new Konva.Layer();
 
+  // Pitch Background
   const field = new Konva.Rect({
     x: offsetX, y: offsetY,
     width: fieldWidth, height: fieldHeight,
-    fill: '#2d8f2d', stroke: 'white', strokeWidth: 3
+    fill: 'rgba(255, 255, 255, 0.02)',
+    stroke: 'rgba(255,255,255,0.15)',
+    strokeWidth: 2,
+    shadowBlur: 0,
+    cornerRadius: 4
   });
 
   const centerCircle = new Konva.Circle({
     x: cx, y: cy,
     radius: 50,
-    stroke: 'white', strokeWidth: 2, fill: 'transparent'
+    stroke: 'rgba(255,255,255,0.15)', strokeWidth: 2, fill: 'transparent'
   });
 
   const centerLine = new Konva.Line({
     points: [offsetX, cy, offsetX + fieldWidth, cy],
-    stroke: 'white', strokeWidth: 2
+    stroke: 'rgba(255,255,255,0.15)', strokeWidth: 2
   });
 
   const centerSpot = new Konva.Circle({
-    x: cx, y: cy, radius: 3, fill: 'white'
+    x: cx, y: cy, radius: 3, fill: 'rgba(255,255,255,0.3)'
   });
 
   const topBox = new Konva.Rect({
     x: cx - 80, y: offsetY,
     width: 160, height: 80,
-    stroke: 'white', strokeWidth: 2
+    stroke: 'rgba(255,255,255,0.15)', strokeWidth: 2
   });
 
   const bottomBox = new Konva.Rect({
     x: cx - 80, y: offsetY + fieldHeight - 80,
     width: 160, height: 80,
-    stroke: 'white', strokeWidth: 2
+    stroke: 'rgba(255,255,255,0.15)', strokeWidth: 2
   });
 
   const cornerRadius = 5;
@@ -80,7 +94,7 @@ function initStage() {
     outerRadius: cornerRadius,
     angle: 90,
     rotation: i * 90,
-    stroke: 'white', strokeWidth: 2
+    stroke: 'rgba(255,255,255,0.15)', strokeWidth: 2
   }));
 
   state.layers.field.add(field, centerCircle, centerLine, centerSpot, topBox, bottomBox);
@@ -88,6 +102,37 @@ function initStage() {
 
   stage.add(state.layers.field, state.layers.formation, state.layers.players);
   state.layers.field.draw();
+
+  // Initial fit
+  fitStageToParent();
+
+  // Handle resize
+  window.addEventListener('resize', fitStageToParent);
+}
+
+function fitStageToParent() {
+  const container = document.getElementById('konva-holder');
+  if (!container || !state.stage) return;
+
+  const containerWidth = container.offsetWidth;
+  const containerHeight = container.offsetHeight;
+
+  // Scale to fit, maintaining aspect ratio if desired, or just fit
+  // Here we scale to fit the container while keeping the logical coordinate system
+  const scale = Math.min(
+    containerWidth / state.dimensions.logicalWidth,
+    containerHeight / state.dimensions.logicalHeight
+  );
+
+  state.stage.width(containerWidth);
+  state.stage.height(containerHeight);
+  state.stage.scale({ x: scale, y: scale });
+
+  // Center the content
+  const newX = (containerWidth - state.dimensions.logicalWidth * scale) / 2;
+  const newY = (containerHeight - state.dimensions.logicalHeight * scale) / 2;
+
+  state.stage.position({ x: newX, y: newY });
 }
 
 // === GHOST SPOTS ===
@@ -108,7 +153,7 @@ function buildGhostSpots(spread = 1, depth = 1) {
     // Row 5: Goalkeeper (1 spot) - positioned at the bottom
     { y: offsetY + fieldHeight - 40, xOffsets: [0] }
   ];
-  const colorsByRow = ['#1976d2', '#42a5f5', '#66bb6a', '#fdd835', '#e53935', '#9e9e9e'];
+  const colorsByRow = ['#3b82f6', '#60a5fa', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
   state.ghostSpots = []; // Clear existing spots
   rows.forEach((row, rowIndex) => {
     const y = offsetY + (row.y - offsetY) * depth;
@@ -118,10 +163,10 @@ function buildGhostSpots(spread = 1, depth = 1) {
       const x = cx + offset * spread;
       const spot = new Konva.Circle({
         x, y,
-        radius: 15,
-        fill: 'rgba(128,128,128,0.3)',
-        stroke: 'white',
-        strokeWidth: 2,
+        radius: 16,
+        fill: 'rgba(255,255,255,0.05)',
+        stroke: 'rgba(255,255,255,0.2)',
+        strokeWidth: 1,
         visible: false
       });
 
@@ -132,8 +177,8 @@ function buildGhostSpots(spread = 1, depth = 1) {
         width: 40,
         text: '',
         fontSize: 10,
-        fontFamily: 'Arial',
-        fill: 'white',
+        fontFamily: 'Outfit',
+        fill: 'rgba(255,255,255,0.5)',
         align: 'center',
         visible: false,
         listening: false // Let clicks pass through to spot
@@ -269,19 +314,32 @@ function checkIfPlayersAreAdjacent(players) {
 
 // === CREATE PLAYER ===
 // Updated drag handling to use formation-aware spacing
-function createPlayer(x, y, role = 'P', color = '#1976d2') {
+function createPlayer(x, y, role = 'P', color = '#3b82f6') {
   const group = new Konva.Group({ x, y, draggable: true });
+
+  // Glow effect
+  const glow = new Konva.Circle({
+    radius: 22,
+    fill: color,
+    opacity: 0,
+    listening: false
+  });
+
   const circle = new Konva.Circle({
     radius: 18,
     fill: color,
     stroke: 'white',
-    strokeWidth: 2
+    strokeWidth: 2,
+    shadowColor: color,
+    shadowBlur: 10,
+    shadowOpacity: 0.5
   });
-  const fontSize = role.length > 3 ? 9 : (role.length > 2 ? 10 : 12);
+
+  const fontSize = role.length > 3 ? 9 : (role.length > 2 ? 10 : 11);
   const label = new Konva.Text({
     text: role,
     fontSize: fontSize,
-    fontFamily: 'Arial, sans-serif',
+    fontFamily: 'Outfit',
     fontStyle: 'bold',
     fill: 'white',
     align: 'center',
@@ -291,20 +349,60 @@ function createPlayer(x, y, role = 'P', color = '#1976d2') {
     offsetX: 18,
     offsetY: 18
   });
-  group.add(circle, label);
+
+  group.add(glow, circle, label);
   group.currentSpot = null;
   group.playerRole = role;
 
   let originalSpot = null;
 
+  group.on('mouseenter', () => {
+    document.body.style.cursor = 'pointer';
+    new Konva.Tween({
+      node: glow,
+      duration: 0.2,
+      opacity: 0.4,
+      scaleX: 1.2,
+      scaleY: 1.2
+    }).play();
+  });
+
+  group.on('mouseleave', () => {
+    document.body.style.cursor = 'default';
+    new Konva.Tween({
+      node: glow,
+      duration: 0.2,
+      opacity: 0,
+      scaleX: 1,
+      scaleY: 1
+    }).play();
+  });
+
   group.on('dragstart', () => {
     originalSpot = group.currentSpot; // Store original spot
     showGhostSpots();
     if (group.currentSpot) group.currentSpot.occupied = false;
+
+    // Lift effect
+    new Konva.Tween({
+      node: group,
+      duration: 0.1,
+      scaleX: 1.1,
+      scaleY: 1.1
+    }).play();
   });
 
   group.on('dragend', () => {
     hideGhostSpots();
+
+    // Drop effect
+    new Konva.Tween({
+      node: group,
+      duration: 0.1,
+      scaleX: 1,
+      scaleY: 1
+    }).play();
+
     let minDist = Infinity, closest = null;
 
     // Find closest available spot
@@ -340,9 +438,13 @@ function createPlayer(x, y, role = 'P', color = '#1976d2') {
         //Update label 
         const textNode = group.findOne('Text');
         textNode.text(finalRole);
-        textNode.fontSize(finalRole.length > 3 ? 9 : (finalRole.length > 2 ? 10 : 12));
+        textNode.fontSize(finalRole.length > 3 ? 9 : (finalRole.length > 2 ? 10 : 11));
 
-        group.findOne('Circle').fill(closest.RoleColor);
+        const circleNode = group.findOne('Circle');
+        circleNode.fill(closest.RoleColor);
+        circleNode.shadowColor(closest.RoleColor);
+
+        group.children[0].fill(closest.RoleColor); // Update glow color
 
         state.layers.players.draw();
       }, 350); // Allow time for position update
@@ -395,7 +497,7 @@ function initPlayers() {
       return;
     }
 
-    const color = spot.RoleColor || '#1976d2';
+    const color = spot.RoleColor || '#3b82f6';
     const player = createPlayer(spot.x(), spot.y(), role, color);
     spot.occupied = true;
     player.currentSpot = spot;
@@ -404,7 +506,7 @@ function initPlayers() {
 
     const textNode = player.findOne('Text');
     textNode.text(newRole);
-    textNode.fontSize(newRole.length > 3 ? 9 : (newRole.length > 2 ? 10 : 12));
+    textNode.fontSize(newRole.length > 3 ? 9 : (newRole.length > 2 ? 10 : 11));
     state.layers.players.add(player);
     state.players.push(player);
   });
@@ -478,7 +580,7 @@ function applyFormation(name) {
     // Update label text and font size
     const textNode = player.findOne('Text');
     textNode.text(newRole);
-    textNode.fontSize(newRole.length > 2 ? 10 : 12);
+    textNode.fontSize(newRole.length > 2 ? 10 : 11);
 
     // Track rows that need adjustment
     if (oldRowIndex !== undefined) rowsToAdjust.add(oldRowIndex);
@@ -521,7 +623,7 @@ function setPlayerRole(player, newRole) {
   player.playerRole = newRole;
   const textNode = player.findOne('Text');
   textNode.text(newRole);
-  textNode.fontSize(newRole.length > 2 ? 10 : 12);
+  textNode.fontSize(newRole.length > 2 ? 10 : 11);
   state.layers.players.draw();
 }
 
@@ -554,7 +656,7 @@ function showGhostSpots() {
     if (!spot.occupied) {
       spot.visible(true);
       spot.labelNode.visible(true);
-      spot.fill('rgba(128,128,128,0.6)');
+      spot.fill('rgba(255,255,255,0.1)');
     }
   }
   state.layers.formation.draw();
@@ -563,7 +665,7 @@ function hideGhostSpots() {
   state.ghostSpots.forEach(s => {
     s.visible(false);
     s.labelNode.visible(false);
-    s.fill('rgba(128,128,128,0.3)');
+    s.fill('rgba(255,255,255,0.05)');
   });
   state.layers.formation.draw();
 }
@@ -572,7 +674,7 @@ function showAllSpots() {
   state.ghostSpots.forEach(s => {
     s.visible(true);
     s.labelNode.visible(true);
-    s.fill('rgba(128,128,128,0.4)');
+    s.fill('rgba(255,255,255,0.1)');
   });
   state.layers.formation.draw();
 
@@ -592,9 +694,62 @@ function resetFormation() {
   applyFormation('433');
 }
 
-// === BOOTSTRAP ===
+// === SIMULATION LOGIC ===
+function simulateMovement() {
+  if (state.isSimulating) {
+    // Reset to base formation
+    state.players.forEach(player => {
+      if (player.currentSpot) {
+        new Konva.Tween({
+          node: player,
+          duration: 0.6,
+          x: player.currentSpot.x(),
+          y: player.currentSpot.y(),
+          easing: Konva.Easings.EaseInOut
+        }).play();
+      }
+    });
+
+    state.isSimulating = false;
+    const btn = document.getElementById('simulate-btn');
+    if (btn) {
+      btn.innerHTML = '<i class="fas fa-play"></i> Simulate';
+      btn.classList.remove('active');
+    }
+  } else {
+    // Apply movements
+    state.players.forEach(player => {
+      const role = player.playerRole;
+      // Determine side based on position relative to center
+      const side = player.x() < state.dimensions.cx ? 'left' : (player.x() > state.dimensions.cx ? 'right' : 'center');
+
+      const movement = getMovementForRole(role, side);
+
+      if (movement.x !== 0 || movement.y !== 0) {
+        new Konva.Tween({
+          node: player,
+          duration: 0.8,
+          x: player.x() + movement.x,
+          y: player.y() + movement.y,
+          easing: Konva.Easings.EaseInOut
+        }).play();
+      }
+    });
+
+    state.isSimulating = true;
+    const btn = document.getElementById('simulate-btn');
+    if (btn) {
+      btn.innerHTML = '<i class="fas fa-undo"></i> Reset';
+      btn.classList.add('active');
+    }
+  }
+}
+
 // === BOOTSTRAP ===
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize theme system
+  initTheme();
+
   initStage();
   buildGhostSpots();
   initPlayers();
@@ -613,4 +768,60 @@ document.addEventListener('DOMContentLoaded', () => {
       applyFormation(formationName);
     });
   });
+
+  // Theme switcher functionality
+  const themeToggle = document.getElementById('theme-toggle');
+  const themeDropdown = document.getElementById('theme-dropdown');
+
+  if (themeToggle && themeDropdown) {
+    // Toggle dropdown visibility
+    themeToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      themeDropdown.classList.toggle('active');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!themeToggle.contains(e.target) && !themeDropdown.contains(e.target)) {
+        themeDropdown.classList.remove('active');
+      }
+    });
+
+    // Handle theme selection
+    const themeOptions = themeDropdown.querySelectorAll('.theme-option');
+    themeOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        const themeName = option.dataset.theme;
+        applyTheme(themeName);
+        themeDropdown.classList.remove('active');
+
+        // Update active state
+        themeOptions.forEach(opt => opt.classList.remove('active'));
+        option.classList.add('active');
+      });
+    });
+
+    // Set initial active theme option
+    const currentTheme = getCurrentTheme();
+    themeOptions.forEach(opt => {
+      if (opt.dataset.theme === currentTheme) {
+        opt.classList.add('active');
+      }
+    });
+  }
+
+  // Simulate Movement button (placeholder)
+  const simulateMovementBtn = document.getElementById('simulate-movement-btn');
+  if (simulateMovementBtn) {
+    simulateMovementBtn.addEventListener('click', () => {
+      // Call existing simulation function
+      simulateMovement();
+    });
+  }
+
+  // Bind legacy simulation button if it exists
+  const simBtn = document.getElementById('simulate-btn');
+  if (simBtn) {
+    simBtn.addEventListener('click', simulateMovement);
+  }
 });

@@ -1,0 +1,213 @@
+/* ========== CHALKBOARD TACTICS THEME ========== */
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker\u0026family=Caveat:wght@400;700\u0026display=swap');
+
+/* Chalkboard base */
+body.theme-chalkboard {
+    font-family: 'Caveat', cursive;
+    background: #1a2a1a;
+    background-image:
+        radial-gradient(circle at 20% 30%, rgba(100, 120, 100, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(80, 100, 80, 0.1) 0%, transparent 50%);
+    color: #E8E8E8;
+}
+
+/* Chalk dust texture overlay */
+body.theme-chalkboard::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('data:image/svg+xml;utf8,\u003csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"\u003e\u003cfilter id="noise"\u003e\u003cfeTurbulence baseFrequency="0.9"/\u003e\u003c/filter\u003e\u003crect width="100%" height="100%" filter="url(%23noise)" opacity="0.05"/\u003e\u003c/svg\u003e');
+    pointer-events: none;
+    z-index: 0;
+}
+
+.app-container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Header */
+body.theme-chalkboard .header {
+    background: rgba(20, 30, 20, 0.9);
+    border-bottom: 3px solid #8B7355;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+body.theme-chalkboard .brand-icon {
+    background: #5a4a3a;
+    border-radius: 8px;
+    border: 2px solid #D4AF37;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+body.theme-chalkboard .brand-info h1 {
+    font-family: 'Permanent Marker', cursive;
+    color: #FFFFFF;
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.7);
+    font-size: 28px;
+    letter-spacing: 1px;
+}
+
+body.theme-chalkboard .brand-info span {
+    font-family: 'Caveat', cursive;
+    color: #D4AF37;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+/* Buttons with chalk style */
+body.theme-chalkboard .btn-icon,
+body.theme-chalkboard .btn-primary {
+    background: rgba(232, 232, 232, 0.1);
+    border: 2px solid #E8E8E8;
+    border-radius: 4px;
+    color: #E8E8E8;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+body.theme-chalkboard .btn-icon:hover,
+body.theme-chalkboard .btn-primary:hover {
+    background: rgba(232, 232, 232, 0.2);
+    border-color: #FFFFFF;
+    box-shadow: 0 3px 8px rgba(255, 255, 255, 0.2);
+}
+
+/* Panels */
+body.theme-chalkboard .sidebar-panel {
+    background: rgba(30, 45, 30, 0.8);
+    border: 3px solid #8B7355;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), inset 0 0 50px rgba(100, 120, 100, 0.1);
+}
+
+body.theme-chalkboard .panel-header {
+    background: rgba(40, 55, 40, 0.9);
+    border-bottom: 2px dashed #B0B0B0;
+}
+
+body.theme-chalkboard .panel-header h2 {
+    font-family: 'Permanent Marker', cursive;
+    color: #FFFFFF;
+    font-size: 20px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+body.theme-chalkboard .panel-header i {
+    color: #D4AF37;
+    filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.5));
+}
+
+/* Formation Buttons */
+body.theme-chalkboard .formation-btn {
+    background: rgba(232, 232, 232, 0.05);
+    border: 2px dashed #B0B0B0;
+    border-radius: 6px;
+}
+
+body.theme-chalkboard .formation-btn:hover {
+    background: rgba(232, 232, 232, 0.1);
+    border-color: #E8E8E8;
+    border-style: solid;
+}
+
+body.theme-chalkboard .formation-btn.active {
+    background: rgba(212, 175, 55, 0.2);
+    border-color: #D4AF37;
+    border-style: solid;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+body.theme-chalkboard .formation-info strong {
+    font-family: '  Permanent Marker', cursive;
+    color: #FFFFFF;
+}
+
+body.theme-chalkboard .formation-info small {
+    color: #B0B0B0;
+}
+
+/* Pitch - Chalkboard style */
+body.theme-chalkboard .pitch-container {
+    background: #2D4a2d;
+    border: 4px solid #8B7355;
+    border-radius: 12px;
+    box-shadow:
+        0 0 30px rgba(0, 0, 0, 0.5),
+        inset 0 0 100px rgba(20, 40, 20, 0.8);
+    position: relative;
+}
+
+/* Chalk smudges and eraser marks */
+body.theme-chalkboard .pitch-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('data:image/svg+xml;utf8,\u003csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300"\u003e\u003cfilter id="chalk"\u003e\u003cfeTurbulence baseFrequency="0.05" numOctaves="3"/\u003e\u003c/filter\u003e\u003crect width="100%" height="100%" filter="url(%23chalk)" opacity="0.03"/\u003e\u003c/svg\u003e');
+    pointer-events: none;
+}
+
+/* Phase Tabs */
+body.theme-chalkboard .phase-tab {
+    background: rgba(232, 232, 232, 0.1);
+    border: 2px solid #B0B0B0;
+    border-radius: 20px;
+    color: #E8E8E8;
+    font-family: 'Caveat', cursive;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+body.theme-chalkboard .phase-tab.active {
+    background: rgba(212, 175, 55, 0.3);
+    border-color: #D4AF37;
+    color: #FFFFFF;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+}
+
+/* Sliders */
+body.theme-chalkboard .slider {
+    background: rgba(176, 176, 176, 0.2);
+    border: 1px solid #B0B0B0;
+    border-radius: 4px;
+}
+
+body.theme-chalkboard .slider::-webkit-slider-thumb {
+    background: #E8E8E8;
+    border: 2px solid #8B7355;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Text styles - handwritten chalk look */
+body.theme-chalkboard .control-header label {
+    font-family: 'Permanent Marker', cursive;
+    color: #E8E8E8;
+    font-size: 14px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+body.theme-chalkboard .control-header .value {
+    font-family: 'Permanent Marker', cursive;
+    color: #D4AF37;
+    text-shadow: 0 0 6px rgba(212, 175, 55, 0.5);
+}
+
+body.theme-chalkboard .control-labels {
+    font-family: 'Caveat', cursive;
+    color: #B0B0B0;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+/* Empty state */
+body.theme-chalkboard .empty-state {
+    color: #B0B0B0;
+    font-family: 'Caveat', cursive;
+    font-size: 18px;
+}

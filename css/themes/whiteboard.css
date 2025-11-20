@@ -1,0 +1,231 @@
+/* ========== TACTICAL WHITEBOARD THEME ========== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700\u0026display=swap');
+
+/* Clean white base */
+body.theme-whiteboard {
+    font-family: 'Inter', sans-serif;
+    background: #F5F5F5;
+    background-image:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+        linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+    color: #1a1a1a;
+}
+
+/* Subtle grid pattern */
+body.theme-whiteboard::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.015) 1px, transparent 1px),
+        linear-gradient(rgba(0, 0, 0, 0.015) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.app-container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Header - Clean and minimal */
+body.theme-whiteboard .header {
+    background: #FFFFFF;
+    border-bottom: 2px solid #E0E0E0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+body.theme-whiteboard .brand-icon {
+    background: linear-gradient(135deg, #457B9D, #1D3557);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(69, 123, 157, 0.3);
+}
+
+body.theme-whiteboard .brand-info h1 {
+    color: #1a1a1a;
+    text-shadow: none;
+    font-weight: 700;
+}
+
+body.theme-whiteboard .brand-info span {
+    color: #457B9D;
+    font-weight: 600;
+}
+
+/* Buttons - Minimalist marker style */
+body.theme-whiteboard .btn-icon,
+body.theme-whiteboard .btn-primary {
+    background: #FFFFFF;
+    border: 2px solid #D0D0D0;
+    color: #1a1a1a;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body.theme-whiteboard .btn-icon:hover {
+    background: #F8F8F8;
+    border-color: #457B9D;
+    color: #457B9D;
+    box-shadow: 0 2px 8px rgba(69, 123, 157, 0.2);
+}
+
+body.theme-whiteboard .btn-primary {
+    background: #457B9D;
+    border-color: #457B9D;
+    color: #FFFFFF;
+}
+
+body.theme-whiteboard .btn-primary:hover {
+    background: #1D3557;
+    border-color: #1D3557;
+    box-shadow: 0 4px 12px rgba(29, 53, 87, 0.3);
+}
+
+/* Panels - Clean white cards */
+body.theme-whiteboard .sidebar-panel {
+    background: #FFFFFF;
+    border: 2px solid #E0E0E0;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+body.theme-whiteboard .panel-header {
+    background: #F8F9FA;
+    border-bottom: 2px solid #E0E0E0;
+}
+
+body.theme-whiteboard .panel-header h2 {
+    color: #1a1a1a;
+    font-weight: 700;
+}
+
+body.theme-whiteboard .panel-header i {
+    color: #457B9D;
+    filter: none;
+}
+
+/* Formation Buttons */
+body.theme-whiteboard .formation-btn {
+    background: #F8F9FA;
+    border: 2px solid #E0E0E0;
+}
+
+body.theme-whiteboard .formation-btn:hover {
+    background: #FFFFFF;
+    border-color: #457B9D;
+    box-shadow: 0 2px 8px rgba(69, 123, 157, 0.15);
+}
+
+body.theme-whiteboard .formation-btn.active {
+    background: #457B9D;
+    border-color: #457B9D;
+    color: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(69, 123, 157, 0.3);
+}
+
+body.theme-whiteboard .formation-btn.active strong,
+body.theme-whiteboard .formation-btn.active small {
+    color: #FFFFFF;
+}
+
+body.theme-whiteboard .formation-viz {
+    background: rgba(69, 123, 157, 0.1);
+    border-color: #457B9D;
+}
+
+body.theme-whiteboard .formation-btn.active .formation-viz {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Pitch - Clean whiteboard with colored dots */
+body.theme-whiteboard .pitch-container {
+    background: #FFFFFF;
+    border: 3px solid #1a1a1a;
+    border-radius: 12px;
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.12),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+    position: relative;
+}
+
+/* Professional marker lines - will show in Konva elements */
+body.theme-whiteboard .pitch-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        linear-gradient(90deg, transparent 49.5%, rgba(0, 0, 0, 0.05) 49.5%, rgba(0, 0, 0, 0.05) 50.5%, transparent 50.5%),
+        linear-gradient(rgba(0, 0, 0, 0.05) 49.5%, transparent 49.5%, transparent 50.5%, rgba(0, 0, 0, 0.05) 50.5%);
+    pointer-events: none;
+}
+
+/* Phase Tabs */
+body.theme-whiteboard .phase-tab {
+    background: #FFFFFF;
+    border: 2px solid #D0D0D0;
+    color: #1a1a1a;
+}
+
+body.theme-whiteboard .phase-tab:hover {
+    background: #F8F9FA;
+    border-color: #457B9D;
+    color: #457B9D;
+}
+
+body.theme-whiteboard .phase-tab.active {
+    background: #457B9D;
+    border-color: #457B9D;
+    color: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(69, 123, 157, 0.3);
+}
+
+/* Sliders */
+body.theme-whiteboard .slider {
+    background: #E0E0E0;
+    border-radius: 8px;
+}
+
+body.theme-whiteboard .slider::-webkit-slider-thumb {
+    background: #457B9D;
+    border: 3px solid #FFFFFF;
+    box-shadow: 0 2px 8px rgba(69, 123, 157, 0.4);
+}
+
+body.theme-whiteboard .slider::-webkit-slider-thumb:hover {
+    background: #1D3557;
+    box-shadow: 0 4px 12px rgba(29, 53, 87, 0.5);
+}
+
+/* Text styles - Clean and professional */
+body.theme-whiteboard .control-header label {
+    color: #666;
+}
+
+body.theme-whiteboard .control-header .value {
+    color: #457B9D;
+    font-weight: 700;
+    text-shadow: none;
+}
+
+body.theme-whiteboard .control-labels {
+    color: #999;
+}
+
+/* Player dots will have drop shadows in canvas - defined in JS */
+/* Red for attacking positions, Blue for defending positions */
+
+/* Empty state */
+body.theme-whiteboard .empty-state {
+    color: #999;
+}
+
+body.theme-whiteboard .empty-state i {
+    color: #457B9D;
+}

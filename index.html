@@ -11,6 +11,7 @@
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/theme-enhancements.css">
 </head>
 
 <body>
@@ -27,8 +28,39 @@
             <span>Interactive Formation Builder</span>
           </div>
         </div>
-
+        <!-- 
         <div class="header-controls">
+          <button class="btn-icon" title="Save Formation">
+            <i class="fas fa-save"></i>
+          </button>
+          <button class="btn-icon" title="Share">
+            <i class="fas fa-share-alt"></i>
+          </button>
+          <button class="btn-icon" title="Reset">
+            <i class="fas fa-redo"></i>
+          </button>
+        </div> -->
+        <div class="header-controls">
+          <button class="btn-icon" id="theme-toggle" title="Change Theme">
+            <i class="fas fa-palette"></i>
+          </button>
+          <div class="theme-dropdown" id="theme-dropdown">
+            <button class="theme-option" data-theme="premium">
+              <i class="fas fa-gem"></i> Premium Glass
+            </button>
+            <button class="theme-option" data-theme="retro">
+              <i class="fas fa-gamepad"></i> 90's Retro
+            </button>
+            <button class="theme-option" data-theme="chalkboard">
+              <i class="fas fa-chalkboard"></i> Chalkboard
+            </button>
+            <button class="theme-option" data-theme="whiteboard">
+              <i class="fas fa-circle"></i> Whiteboard
+            </button>
+          </div>
+          <button class="btn-primary" id="simulate-movement-btn">
+            <i class="fas fa-play"></i> Simulate
+          </button>
           <button class="btn-icon" title="Save Formation">
             <i class="fas fa-save"></i>
           </button>
